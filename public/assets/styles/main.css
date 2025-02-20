@@ -12,10 +12,16 @@ html{
 }
 :root{
     --primary-color: #3f7;
-    --second-color: #053;
-    --third-color: #021;
-    --text-color: #ddd;
+    --second-color: #222;
+    --third-color: #2f2f2f;
+    
+    --text-area-color: #333;
+    --graph-side-color: #222;
+    
     --basic-padding: 10px 15px;
+    --text-color: #ddd;
+
+    --gap-graph-side-numbers: 51px; /* Most be the distance between the numbers on svg less 5px*/
 }
 body{
     background: var(--third-color);
@@ -34,4 +40,14 @@ body{
         order: -1;
         width: 100%;    
     }
+}
+.basic-button{
+    box-shadow: 0 0 5px 0 var(--primary-color);
+    border: var(--primary-color) 2px solid;
+    padding: var(--basic-padding);
+    color: var(--primary-color);
+    background: transparent;
+    align-items: center;
+    cursor: pointer;
+    display: flex;
 }

@@ -33,6 +33,6 @@
 }
 
 .code-side .test-cases .test-case textarea{
-    background: #142;
+    background: var(--text-area-color);
     border-radius: 0 0 10px 10px;
 }

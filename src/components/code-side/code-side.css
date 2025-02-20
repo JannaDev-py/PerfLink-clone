@@ -39,15 +39,7 @@
     padding: 7px;
     margin: 0 15px;
 }
-.basic-button{
-    border: var(--primary-color) 1px solid;
-    padding: var(--basic-padding);
-    color: var(--primary-color);
-    background: transparent;
-    align-items: center;
-    cursor: pointer;
-    display: flex;
-}
+
 .code-side .Globals .controls .run-test {
     border-radius: 20px 0 0 20px;
     background: var(--third-color);

@@ -1,9 +1,49 @@
 .graph-side{
     width: 40%;
     height: 100dvh;
-    display: grid;
-    place-content: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--graph-side-color);
+    padding: 50px;
 }
 .graph-side svg{
     transform: rotate(180deg);
+}
+.graph-side .percentages,
+.graph-side .numbers{
+    width: fit-content;
+    margin-top: 20px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-color);
+    gap: var(--gap-graph-side-numbers);
+    margin-left: 15px;
+}
+.graph-side .percentages .percentage-container,
+.graph-side .numbers .number-container{
+    width: 5px;
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.graph-side .numbers span{
+    position: relative;
+}
+.graph-side .numbers span:nth-child(1):before{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background: #fff2;
+    top: -5px;
+    left: -10px;
 }
