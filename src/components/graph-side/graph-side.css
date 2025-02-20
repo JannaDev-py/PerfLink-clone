@@ -1,0 +1,9 @@
+.graph-side{
+    width: 40%;
+    height: 100dvh;
+    display: grid;
+    place-content: center;
+}
+.graph-side svg{
+    transform: rotate(180deg);
+}

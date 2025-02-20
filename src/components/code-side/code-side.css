@@ -1,0 +1,83 @@
+
+.code-side{
+    width: 60%;
+    flex-direction: column;
+    display: flex;
+    height: 100dvh;
+    color: #fff;
+    padding: 30px;
+    gap: 50px;
+}
+.code-side header{
+    font-size: 1.2rem;
+}
+.code-side .Globals header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.code-side .Globals header label,
+.code-side .test-cases header h3{
+    font-weight: 700;
+    font-size: 2rem;
+}
+.code-side .Globals{
+    align-items: center;
+    flex-wrap: wrap;
+    display: flex;
+    margin-top: 20px;
+    gap: 20px;
+}
+.code-side .Globals .controls{
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+}
+.code-side .Globals .controls .control-enter{
+    background: var(--second-color);
+    font-size: 1rem;
+    padding: 7px;
+    margin: 0 15px;
+}
+.basic-button{
+    border: var(--primary-color) 1px solid;
+    padding: var(--basic-padding);
+    color: var(--primary-color);
+    background: transparent;
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+}
+.code-side .Globals .controls .run-test {
+    border-radius: 20px 0 0 20px;
+    background: var(--third-color);
+    animation: blink 1s infinite;
+}
+.code-side .Globals .controls .save-url {
+    border-radius: 0 20px 20px 0;
+}
+.code-side textarea{
+    background: var(--second-color);
+    padding: var(--basic-padding);
+    color: var(--text-color);
+    field-sizing: content;
+    border-radius: 10px;
+    resize: none;
+    width: 100%;
+    font-size: 1rem;
+}
+.code-side .test-cases{
+    flex-grow: 1;
+}
+.code-side .test-cases header{
+    display: flex;
+    justify-content: space-between;
+}
+.code-side .test-cases header button{
+    border-radius: 20px;
+    font-size: 1.1rem;
+}
+
+.code-side svg{
+    cursor: pointer;
+}

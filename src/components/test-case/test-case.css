@@ -1,0 +1,38 @@
+.code-side .test-cases .test-case{
+    margin-top: 20px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    animation: test-case-appear 0.5s;
+}
+.code-side .test-cases .test-case header{
+    background: var(--second-color);
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+}
+.code-side .test-cases .test-case .left, 
+.code-side .test-cases .test-case .right{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.code-side .test-cases .test-case .left p{
+    background: var(--third-color);
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+}
+.code-side .test-cases .test-case .right p{
+    background: var(--third-color);
+    padding: 4px;
+}
+
+.code-side .test-cases .test-case textarea{
+    background: #142;
+    border-radius: 0 0 10px 10px;
+}
