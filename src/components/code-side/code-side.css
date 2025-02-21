@@ -1,4 +1,3 @@
-
 .code-side{
     width: 60%;
     flex-direction: column;
@@ -39,7 +38,6 @@
     padding: 7px;
     margin: 0 15px;
 }
-
 .code-side .Globals .controls .run-test {
     border-radius: 20px 0 0 20px;
     background: var(--third-color);
@@ -60,7 +58,15 @@
 }
 .code-side .test-cases{
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
+.code-side .test-cases .test-cases-container{
+    display: flex;
+    flex-direction: column;
+}
+
 .code-side .test-cases header{
     display: flex;
     justify-content: space-between;
@@ -69,7 +75,6 @@
     border-radius: 20px;
     font-size: 1.1rem;
 }
-
 .code-side svg{
     cursor: pointer;
 }
