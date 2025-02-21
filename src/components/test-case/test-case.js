@@ -1,3 +1,4 @@
+// this function is used to create a test case
 export function createTestCase() {
     const $testCase = document.createElement('DIV');
 
@@ -26,12 +27,14 @@ export function createTestCase() {
         return $testCase;
 }
 
+//we dont call the createTestCase function here because we want control when the test case is added
 export function innerTestCase() {
     const $containerTestCase = document.querySelector('.test-cases-container');
     $containerTestCase.appendChild(createTestCase());
     return setTestCaseValuesByDelete();
 }
 
+//this function reset all index, of the test cases and set the value of the test case
 export function setTestCaseValuesByDelete(){
     const $containersTestCase = document.querySelectorAll('.test-case');
 
@@ -39,5 +42,6 @@ export function setTestCaseValuesByDelete(){
         singleContainerTestCase.setAttribute('data-value', index + 1);
         singleContainerTestCase.querySelector('.test-case-number').innerText = index + 1;
     });
+    //return the last test case
     return $containersTestCase[$containersTestCase.length - 1];
 }
