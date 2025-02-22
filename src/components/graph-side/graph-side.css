@@ -11,9 +11,8 @@
 .graph-side svg{
     transform: rotate(180deg);
 }
-.graph-side .percentages,
 .graph-side .numbers{
-    width: fit-content;
+    width: 300px;
     margin-top: 20px;
     font-size: 1.2rem;
     display: flex;
@@ -21,9 +20,7 @@
     justify-content: center;
     color: var(--text-color);
     gap: var(--gap-graph-side-numbers);
-    margin-left: 15px;
 }
-.graph-side .percentages .percentage-container,
 .graph-side .numbers .number-container{
     width: 5px;
     display: flex;
@@ -44,6 +41,6 @@
     height: 30px;
     border-radius: 100%;
     background: #fff2;
-    top: -5px;
-    left: -10px;
+    top: -9px;
+    left: -11px;
 }

@@ -15,7 +15,7 @@
     <title>BenchMark</title>
 </head>
 <body>
-    <div class="code-side">
+    <section class="code-side">
         <div class="Globals">
             <header>
                 <label for="globlal-textarea">Globals</label>
@@ -43,42 +43,13 @@
             </header>
             <div class="test-cases-container"></div>
         </div>
-    </div>
-    <div class="graph-side">
-        <svg width="300px" heigth="300px" viewBox="0 0 300 300">
-            <g id="bg-line">
-                <rect x="56" y="0" width="5" height="300" fill="black"></rect>
-                <rect x="112" y="0" width="5" height="300" fill="black"></rect>
-                <rect x="168" y="0" width="5" height="300" fill="black"></rect>
-                <rect x="224" y="0" width="5" height="300" fill="black"></rect>    
-            </g>
-            <g id="graph-line">
-                <rect x="56" y="0" width="5" height="150" fill="red"></rect>
-                <rect x="112" y="0" width="5" height="200" fill="orange"></rect>
-                <rect x="168" y="0" width="5" height="250" fill="yellow"></rect>
-                <rect x="224" y="0" width="5" height="100" fill="green"></rect>    
-            </g>
+    </section>
+    <section class="graph-side">
+        <svg width="300px" heigth="300px" viewBox="0 0 300 300" class="graph-svg">
         </svg>
         
-        <div class="numbers">
-            <div class="number-container">
-                <span>1</span>
-                <span>0%</span>
-            </div>
-            <div class="number-container">
-                <span>2</span>
-                <span>100%</span>
-            </div>
-            <div class="number-container">
-                <span>3</span>
-                <span>0%</span>
-            </div>
-            <div class="number-container">
-                <span>4</span>
-                <span>100%</span>
-            </div>           
+        <div class="numbers">        
         </div>
-    </div>
-
+    </section>
 </body>
 </html>

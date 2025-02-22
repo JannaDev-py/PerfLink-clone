@@ -61,12 +61,18 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    scrollbar-color: var(--primary-color) transparent;
+}
+.code-side .test-cases::-webkit-scrollbar-button{
+    display: none;
+}
+.code-side .test-cases::-webkit-scrollbar-track{
+    background: transparent;
 }
 .code-side .test-cases .test-cases-container{
     display: flex;
     flex-direction: column;
 }
-
 .code-side .test-cases header{
     display: flex;
     justify-content: space-between;
