@@ -1,13 +1,30 @@
 import { innerTestCase, setTestCaseValuesByDelete } from './components/test-case/test-case.js';
-import { setGraph } from './components/graph-side/graph-side.js';
+import { setGraph, setGraphValues } from './components/graph-side/graph-side.js';
 
 const $btnAddTestCase = document.querySelector('#add-test-case');
 const $btnRunTestCases = document.getElementById('run-test');
 
 const worker = new Worker('../public/worker.js'); //create a worker to run the test cases
 
-$btnAddTestCase.addEventListener('click', ()=>{    
-    const $testCase = innerTestCase();  //call the function inside a variable to get the current test case created
+function runTestCases(){
+    const globalCode = document.querySelector('#global-textarea').textContent;
+    const testCasesCode = document.querySelectorAll('.test-case-textarea');
+
+    let codeToWorker = [];
+    
+    //put the codes on an array to later can use .sort()
+    testCasesCode.forEach(testCaseCode=>{
+        codeToWorker.push(testCaseCode.value);
+    })
+
+    worker.postMessage({codeToWorker, globalCode});
+
+    const { resolve, promise } = Promise.withResolvers() //use a prommise beacuase the time of each code is a second 
+    worker.onmessage = event => { resolve(event.data) }
+    return promise //return the promise
+}
+
+function addEventsToTestCases($testCase){
     const $containerTestCase = document.querySelector('.test-cases-container');
     const $btnDeleteTestCase = $testCase.querySelector('.delete-svg'); //get delete button of the current test case
     const $copySvg = $testCase.querySelector('.copy-container');
@@ -28,25 +45,31 @@ $btnAddTestCase.addEventListener('click', ()=>{
         setTestCaseValuesByDelete();
         setGraph(); //call the function to set the graph everytime a test case is deleted
     });
+}
 
+$btnRunTestCases.addEventListener('click', ()=>{
+    const $testCaseOps = document.querySelectorAll('.test-case .ops');
+    $testCaseOps.forEach(testCaseOp => testCaseOp.innerHTML = 
+        '<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24px" height="15px"><circle cx="4" cy="12" r="3"><animate id="spinner_qFRN" begin="0;spinner_OcgL.end+0.25s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="12" cy="12" r="3"><animate begin="spinner_qFRN.begin+0.1s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="20" cy="12" r="3"><animate id="spinner_OcgL" begin="spinner_qFRN.begin+0.2s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle></svg>');
+
+    runTestCases().then(result=>{
+        setGraphValues(result);
+    })
+});
+
+$btnAddTestCase.addEventListener('click', ()=>{    
+    const $testCase = innerTestCase();  //call the function inside a variable to get the current test case created
+    addEventsToTestCases($testCase); //call the function to add the events to the test case created
     setGraph(); //call the function to set the graph everytime a test case is created
 });
 
-function RunTestCases(){
-    const globgalCode = document.querySelector('#global-textarea').value;
-    const testCasesCode = document.querySelectorAll('.test-case-textarea');
-    let codeToWorker = [];
+//on init we need to set the graph and run the test cases
+document.addEventListener(`DOMContentLoaded`, ()=>{
+    const $testCaseOps = document.querySelectorAll('.test-case .ops');  
+    $testCaseOps.forEach(testCaseOp => testCaseOp.innerHTML = 
+        '<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24px" height="15px"><circle cx="4" cy="12" r="3"><animate id="spinner_qFRN" begin="0;spinner_OcgL.end+0.25s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="12" cy="12" r="3"><animate begin="spinner_qFRN.begin+0.1s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="20" cy="12" r="3"><animate id="spinner_OcgL" begin="spinner_qFRN.begin+0.2s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle></svg>');
     
-    testCasesCode.forEach(testCaseCode=>{
-        codeToWorker.push(testCaseCode.value);
-    })
-
-    worker.postMessage({codeToWorker, globgalCode});
-
-    const { resolve, promise } = Promise.withResolvers()
-    worker.onmessage = event => { resolve(event.data) }
-    promise.then(data => { console.log(data) })
-    return promise
-}
-
-$btnRunTestCases.addEventListener('click', RunTestCases);
+    setGraph();
+    runTestCases().then(result => setGraphValues(result));
+    document.querySelectorAll('.test-case').forEach(testCase => addEventsToTestCases(testCase)); //select all test cases that exists on the page add start
+});

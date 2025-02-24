@@ -11,6 +11,9 @@
 .graph-side svg{
     transform: rotate(180deg);
 }
+.graph-side svg rect{
+    transition: height 0.5s;
+}
 .graph-side .numbers{
     width: 300px;
     margin-top: 20px;

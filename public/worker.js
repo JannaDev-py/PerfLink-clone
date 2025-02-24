@@ -1,12 +1,11 @@
 self.addEventListener('message', (e)=>{
     const {codeToWorker, globalCode} = e.data;
-    console.log(e.data)
     let resultsTestCases = [];
 
     codeToWorker.forEach((code, index)=>{
         try{
             const result = () =>{
-                let end = Date.now() + 1000;
+                let end = Date.now() + 1000; 
                 let ops = 0;
 
                 while(Date.now() < end){
@@ -20,7 +19,7 @@ self.addEventListener('message', (e)=>{
             }
             resultsTestCases.push(result());
         }catch(e){
-            console.log(e);
+            resultsTestCases.push({index, ops: `error`});
         }
     })
 
