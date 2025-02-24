@@ -41,6 +41,8 @@
 .code-side .Globals .controls .run-test {
     border-radius: 20px 0 0 20px;
     background: var(--third-color);
+}
+.run-test-animation{
     animation: blink 1s infinite;
 }
 .code-side .Globals .controls .save-url {

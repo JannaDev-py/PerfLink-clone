@@ -25,7 +25,7 @@ export function createTestCase() {
                 </svg>
             </div>
         </header>
-        <textarea name="" id="test-case-textarea"></textarea>`
+        <textarea name="textarea-test-case" id="test-case-textarea" class="test-case-textarea"></textarea>`
         return $testCase;
 }
 
@@ -43,6 +43,8 @@ export function setTestCaseValuesByDelete(){
     $containersTestCase.forEach((singleContainerTestCase, index)=>{
         singleContainerTestCase.setAttribute('data-value', index + 1);
         singleContainerTestCase.querySelector('.test-case-number').innerText = index + 1;
+        singleContainerTestCase.querySelector('label').setAttribute('for', `test-case-textarea-${index + 1}`); 
+        singleContainerTestCase.querySelector('textarea').setAttribute('id', `test-case-textarea-${index + 1}`); //change id to dont duplicate ids
     });
     //return the last test case
     return $containersTestCase[$containersTestCase.length - 1];

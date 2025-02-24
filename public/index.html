@@ -18,12 +18,12 @@
     <section class="code-side">
         <div class="Globals">
             <header>
-                <label for="globlal-textarea">Globals</label>
+                <label for="global-textarea">Globals</label>
                 <div class="controls">
                     <div class="control-enter">
                         Ctrl + Enter
                     </div>
-                    <button class="run-test basic-button" aria-label="Run Tests">
+                    <button class="run-test basic-button run-test-animation" aria-label="Run Tests" id="run-test">
                         Run Tests
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2"> <path d="M19.933 13.041a8 8 0 1 1 -9.925 -8.788c3.899 -1 7.935 1.007 9.425 4.747"></path> <path d="M20 4v5h-5"></path> </svg> 
                     </button>
@@ -34,7 +34,7 @@
                     </button>
                 </div>    
             </header>
-            <textarea name="global-code" id="globlal-textarea"></textarea>
+            <textarea name="global-code" id="global-textarea"> const data = [...Array(1000).keys()]</textarea>
         </div>
         <div class="test-cases">
             <header class="test-cases-header">
@@ -47,7 +47,7 @@
     <section class="graph-side">
         <svg width="300px" heigth="300px" viewBox="0 0 300 300" class="graph-svg">
         </svg>
-        
+            
         <div class="numbers">        
         </div>
     </section>

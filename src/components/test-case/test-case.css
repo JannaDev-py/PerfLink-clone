@@ -32,7 +32,9 @@
     padding: 4px;
 }
 
+
 .code-side .test-cases .test-case textarea{
     background: var(--text-area-color);
     border-radius: 0 0 10px 10px;
+    left: 0;
 }

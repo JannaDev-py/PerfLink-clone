@@ -2,6 +2,9 @@ import { innerTestCase, setTestCaseValuesByDelete } from './components/test-case
 import { setGraph } from './components/graph-side/graph-side.js';
 
 const $btnAddTestCase = document.querySelector('#add-test-case');
+const $btnRunTestCases = document.getElementById('run-test');
+
+const worker = new Worker('../public/worker.js'); //create a worker to run the test cases
 
 $btnAddTestCase.addEventListener('click', ()=>{    
     const $testCase = innerTestCase();  //call the function inside a variable to get the current test case created
@@ -23,8 +26,27 @@ $btnAddTestCase.addEventListener('click', ()=>{
         $containerTestCase.removeChild($testCase);
         //always that a test case is created or deleted we need to reset the test case values(index, datavalue)
         setTestCaseValuesByDelete();
-        setGraph(); //call the function to set the graph evrytime a test case is deleted
+        setGraph(); //call the function to set the graph everytime a test case is deleted
     });
 
-    setGraph(); //call the function to set the graph evrytime a test case is created
+    setGraph(); //call the function to set the graph everytime a test case is created
 });
+
+function RunTestCases(){
+    const globgalCode = document.querySelector('#global-textarea').value;
+    const testCasesCode = document.querySelectorAll('.test-case-textarea');
+    let codeToWorker = [];
+    
+    testCasesCode.forEach(testCaseCode=>{
+        codeToWorker.push(testCaseCode.value);
+    })
+
+    worker.postMessage({codeToWorker, globgalCode});
+
+    const { resolve, promise } = Promise.withResolvers()
+    worker.onmessage = event => { resolve(event.data) }
+    promise.then(data => { console.log(data) })
+    return promise
+}
+
+$btnRunTestCases.addEventListener('click', RunTestCases);
