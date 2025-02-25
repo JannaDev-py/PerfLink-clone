@@ -20,26 +20,12 @@ html{
     
     --basic-padding: 10px 15px;
     --text-color: #ddd;
-
-    --gap-graph-side-numbers: 51px; /* Most be the distance between the numbers on svg less 5px*/
 }
 body{
     background: var(--third-color);
     display: flex;
     height: 100dvh;
     color: var(--text-color);
-}
-@media (max-width: 850px){
-    body{
-        flex-direction: column;
-    }
-    .code-side{
-        width: 100%;   
-    }
-    .graph-side{
-        order: -1;
-        width: 100%;    
-    }
 }
 .basic-button{
     box-shadow: 0 0 5px 0 var(--primary-color);
@@ -50,4 +36,19 @@ body{
     align-items: center;
     cursor: pointer;
     display: flex;
+}
+@media (max-width: 1000px){
+    body{
+        flex-direction: column;
+    }
+    .code-side{
+        width: 100%;   
+    }
+    .graph-side{
+        order: -1;
+        width: 100%;    
+    }
+    .control-enter{
+        display: none;
+    }
 }

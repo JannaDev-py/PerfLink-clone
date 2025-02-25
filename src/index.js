@@ -47,15 +47,19 @@ function addEventsToTestCases($testCase){
     });
 }
 
-$btnRunTestCases.addEventListener('click', ()=>{
+//make a functionn to UX reset
+function executeTestCasesUX(){
     const $testCaseOps = document.querySelectorAll('.test-case .ops');
+
     $testCaseOps.forEach(testCaseOp => testCaseOp.innerHTML = 
         '<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24px" height="15px"><circle cx="4" cy="12" r="3"><animate id="spinner_qFRN" begin="0;spinner_OcgL.end+0.25s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="12" cy="12" r="3"><animate begin="spinner_qFRN.begin+0.1s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="20" cy="12" r="3"><animate id="spinner_OcgL" begin="spinner_qFRN.begin+0.2s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle></svg>');
+    
+    //reset the height of the line percentage before that be overwritten by the new values
+    const $rectSVG = document.querySelectorAll('.graph-svg .line-percentage');
+    $rectSVG.forEach(rect => rect.style.height = '0');
 
-    runTestCases().then(result=>{
-        setGraphValues(result);
-    })
-});
+    runTestCases().then(result => setGraphValues(result));
+}
 
 $btnAddTestCase.addEventListener('click', ()=>{    
     const $testCase = innerTestCase();  //call the function inside a variable to get the current test case created
@@ -63,13 +67,21 @@ $btnAddTestCase.addEventListener('click', ()=>{
     setGraph(); //call the function to set the graph everytime a test case is created
 });
 
+$btnRunTestCases.addEventListener('click', ()=>{
+    executeTestCasesUX();
+    $btnRunTestCases.classList.remove('run-test-animation');
+});
+
 //on init we need to set the graph and run the test cases
 document.addEventListener(`DOMContentLoaded`, ()=>{
-    const $testCaseOps = document.querySelectorAll('.test-case .ops');  
-    $testCaseOps.forEach(testCaseOp => testCaseOp.innerHTML = 
-        '<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24px" height="15px"><circle cx="4" cy="12" r="3"><animate id="spinner_qFRN" begin="0;spinner_OcgL.end+0.25s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="12" cy="12" r="3"><animate begin="spinner_qFRN.begin+0.1s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="20" cy="12" r="3"><animate id="spinner_OcgL" begin="spinner_qFRN.begin+0.2s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle></svg>');
-    
-    setGraph();
-    runTestCases().then(result => setGraphValues(result));
+    executeTestCasesUX();
     document.querySelectorAll('.test-case').forEach(testCase => addEventsToTestCases(testCase)); //select all test cases that exists on the page add start
+    setGraph();
 });
+
+//if control + enter is pressed run test cases
+document.addEventListener("keydown", (e)=>{
+    if(e.ctrlKey && e.key === "Enter"){
+        executeTestCasesUX();
+    }
+})

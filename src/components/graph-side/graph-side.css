@@ -15,14 +15,13 @@
     transition: height 0.5s;
 }
 .graph-side .numbers{
-    width: 300px;
+    width: 400px;
     margin-top: 20px;
     font-size: 1.2rem;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     color: var(--text-color);
-    gap: var(--gap-graph-side-numbers);
 }
 .graph-side .numbers .number-container{
     width: 5px;
@@ -35,15 +34,16 @@
 
 .graph-side .numbers span{
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .graph-side .numbers span:nth-child(1):before{
     content: '';
     display: block;
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     border-radius: 100%;
     background: #fff2;
-    top: -9px;
-    left: -11px;
 }

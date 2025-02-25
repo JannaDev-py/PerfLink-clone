@@ -3,16 +3,14 @@ export function setGraph(){
     const $graphSvg = document.querySelector('.graph-svg');
     const $numbersMainContainer = document.querySelector('.numbers');
     const $containersTestCase = document.querySelectorAll('.test-case');
-    const root = document.querySelector(':root').style;
     
     const distanceBetweenNumbers = (300 / ($containersTestCase.length + 1));
-    root.setProperty('--gap-graph-side-numbers', `${distanceBetweenNumbers - 5}px`);
 
     $graphSvg.innerHTML = ""; //reset the graph
     $numbersMainContainer.innerHTML = ""; //reset the numbers
 
     for(let i = 1; i < $containersTestCase.length + 1; i++){ //start at 1 per can multiply by i
-        //point 0,0 on a svg is the right bottom corner and the svg order the elements from the x-position element, so if we add then just with distanceBetweenNumbers its added at start, cause x-value goes increment by distanceBetweenNumbers
+        //point 0,0 on a svg is the right bottom corner and the svg order the elements from the x-position element, so if we add them just with distanceBetweenNumbers its added at start, cause x-value goes increment by distanceBetweenNumbers
         //conclusion: the svg order the element from the x-position element, thats why 300 - position
         const codeHTMLNewLine = `
             <rect x="${300 - ((distanceBetweenNumbers * i) + 2.5)}" y="0" width="5" height="300" fill="black"></rect>    
@@ -31,6 +29,7 @@ export function setGraph(){
 
 export function setGraphValues(data){
     const maxValue = Math.max(...data.map(result => result.ops));
+    let color = `#000`;
 
     data.forEach(resultToSingleTestCase => {
         const ops = resultToSingleTestCase.ops;
@@ -41,9 +40,31 @@ export function setGraphValues(data){
         const $testCaseOps = document.querySelectorAll('.test-case .ops')[indexTestCase];
         
         const heightLinePercentage = (ops / maxValue) * 300; //get the height of the line percentage
-        $linePercentage.setAttribute('height', heightLinePercentage);
+        $linePercentage.style.height = heightLinePercentage;
+        const percentageOnContainer = Math.round((ops / maxValue) * 100); 
 
-        $percentageOnContainer.textContent = `${Math.round((ops / maxValue) * 100)}%`; //set the percentage on the container
-        $testCaseOps.textContent = `${ops} ops/s`; //set the ops on the label
+        if(percentageOnContainer <= 100 && percentageOnContainer > 90) color = `#00ff00`;
+        else if(percentageOnContainer < 90 && percentageOnContainer > 80) color = `#66ff00`;
+        else if(percentageOnContainer < 80 && percentageOnContainer > 70) color = `#ccff00`;
+        else if(percentageOnContainer < 70 && percentageOnContainer > 60) color = `#ffff00`;
+        else if(percentageOnContainer < 60 && percentageOnContainer > 50) color = `#ffcc00`;
+        else if(percentageOnContainer < 50 && percentageOnContainer > 40) color = `#ff9900`;
+        else if(percentageOnContainer < 40 && percentageOnContainer > 30) color = `#ff8000`;
+        else if(percentageOnContainer < 30 && percentageOnContainer > 10) color = `#ff6600`;
+        else if(percentageOnContainer < 20 && percentageOnContainer > 10) color = `#ff3300`;
+        else if(percentageOnContainer < 10 && percentageOnContainer > 0) color = `#ff0000`;
+
+        $linePercentage.style.fill = color;
+
+        $percentageOnContainer.textContent = `${percentageOnContainer}%`; //set the percentage on the container
+
+        if(ops === "error") {
+            $testCaseOps.textContent = `${ops}`;
+            $testCaseOps.style.color = 'red';
+        } 
+        else{
+            $testCaseOps.textContent = `${ops.toLocaleString('en-US')} ops/s`;  //.toLocaleString() to format the number
+            $testCaseOps.style.color = 'var(--text-color)';
+        }
     });
 }
