@@ -1,3 +1,4 @@
+//set the graph for new test cases
 export function setGraph(){
     //get the compenents
     const $graphSvg = document.querySelector('.graph-svg');
@@ -27,6 +28,7 @@ export function setGraph(){
     }
 }
 
+//set the graph for the test cases that already exists with them values
 export function setGraphValues(data){
     const maxValue = Math.max(...data.map(result => result.ops));
     let color = `#000`;
@@ -44,15 +46,15 @@ export function setGraphValues(data){
         const percentageOnContainer = Math.round((ops / maxValue) * 100); 
 
         if(percentageOnContainer <= 100 && percentageOnContainer > 90) color = `#00ff00`;
-        else if(percentageOnContainer < 90 && percentageOnContainer > 80) color = `#66ff00`;
-        else if(percentageOnContainer < 80 && percentageOnContainer > 70) color = `#ccff00`;
-        else if(percentageOnContainer < 70 && percentageOnContainer > 60) color = `#ffff00`;
-        else if(percentageOnContainer < 60 && percentageOnContainer > 50) color = `#ffcc00`;
-        else if(percentageOnContainer < 50 && percentageOnContainer > 40) color = `#ff9900`;
-        else if(percentageOnContainer < 40 && percentageOnContainer > 30) color = `#ff8000`;
-        else if(percentageOnContainer < 30 && percentageOnContainer > 10) color = `#ff6600`;
-        else if(percentageOnContainer < 20 && percentageOnContainer > 10) color = `#ff3300`;
-        else if(percentageOnContainer < 10 && percentageOnContainer > 0) color = `#ff0000`;
+        else if(percentageOnContainer < 91 && percentageOnContainer > 80) color = `#66ff00`;
+        else if(percentageOnContainer < 81 && percentageOnContainer > 70) color = `#ccff00`;
+        else if(percentageOnContainer < 71 && percentageOnContainer > 60) color = `#ffff00`;
+        else if(percentageOnContainer < 61 && percentageOnContainer > 50) color = `#ffcc00`;
+        else if(percentageOnContainer < 51 && percentageOnContainer > 40) color = `#ff9900`;
+        else if(percentageOnContainer < 41 && percentageOnContainer > 30) color = `#ff8000`;
+        else if(percentageOnContainer < 31 && percentageOnContainer > 10) color = `#ff6600`;
+        else if(percentageOnContainer < 21 && percentageOnContainer > 10) color = `#ff3300`;
+        else if(percentageOnContainer < 11 && percentageOnContainer > 0) color = `#ff0000`;
 
         $linePercentage.style.fill = color;
 

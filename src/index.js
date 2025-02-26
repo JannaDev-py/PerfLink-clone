@@ -4,24 +4,18 @@ import { setGraph, setGraphValues } from './components/graph-side/graph-side.js'
 const $btnAddTestCase = document.querySelector('#add-test-case');
 const $btnRunTestCases = document.getElementById('run-test');
 
-const worker = new Worker('../public/worker.js'); //create a worker to run the test cases
-
-function runTestCases(){
+function runTestCases(code){
+    const worker = new Worker('../public/worker.js'); //create a worker for each test case
     const globalCode = document.querySelector('#global-textarea').textContent;
-    const testCasesCode = document.querySelectorAll('.test-case-textarea');
-
-    let codeToWorker = [];
     
-    //put the codes on an array to later can use .sort()
-    testCasesCode.forEach(testCaseCode=>{
-        codeToWorker.push(testCaseCode.value);
-    })
+    worker.postMessage({code, globalCode});    
 
-    worker.postMessage({codeToWorker, globalCode});
-
-    const { resolve, promise } = Promise.withResolvers() //use a prommise beacuase the time of each code is a second 
-    worker.onmessage = event => { resolve(event.data) }
-    return promise //return the promise
+    const { resolve, promise } = Promise.withResolvers() //use a prommise because the time of each code is a second 
+    worker.onmessage = event => { 
+        resolve(event.data) 
+        worker.terminate();
+    }
+    return promise
 }
 
 function addEventsToTestCases($testCase){
@@ -57,9 +51,33 @@ function executeTestCasesUX(){
     //reset the height of the line percentage before that be overwritten by the new values
     const $rectSVG = document.querySelectorAll('.graph-svg .line-percentage');
     $rectSVG.forEach(rect => rect.style.height = '0');
+    
+    //get every code of the test cases and run the funciton runTestCases for each test case code and add the result to the array
+    const testCasesCode = document.querySelectorAll('.test-case-textarea');
+    let resultsTestCases = [];
+    
+    //become node list to array
+    const testCasesArray = Array.from(testCasesCode);
 
-    runTestCases().then(result => setGraphValues(result));
+    //make an array of promises
+    const promises = testCasesArray.map((testCaseCode, index) => {
+        return runTestCases(testCaseCode.value)
+            .then(result => {
+                const ops = result.ops;
+                resultsTestCases.push({ index, ops });
+            });
+    });
+    
+    //when all promises are resolved we can use resultsTestCases to set the graph
+    Promise.all(promises)
+        .then(() => {
+            setGraphValues(resultsTestCases);
+        })
+        .catch(error => {
+            console.error('Ocurrió un error:', error);
+        });
 }
+
 
 $btnAddTestCase.addEventListener('click', ()=>{    
     const $testCase = innerTestCase();  //call the function inside a variable to get the current test case created

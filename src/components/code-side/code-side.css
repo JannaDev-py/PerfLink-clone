@@ -56,7 +56,7 @@
     border-radius: 10px;
     resize: none;
     width: 100%;
-    font-size: 1rem;
+    font-size: 1.5rem;
 }
 .code-side .test-cases{
     flex-grow: 1;

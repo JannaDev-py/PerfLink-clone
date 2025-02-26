@@ -1,26 +1,24 @@
 onmessage = async (e) => {
-    const { codeToWorker, globalCode } = e.data;
-    let resultsTestCases = [];
-    let result;
+    const { code, globalCode } = e.data;
+    let result = 0;
 
-    for (const [index, code] of codeToWorker.entries()) {
-        try {
-            result = await eval(`(async () => {
-                let end = Date.now() + 1000;
-                let ops = 0;
-                ${globalCode};
+    try {
+        result = await eval(`(async () => {
+            let end = Date.now() + 100;
+            let ops = 0;
+            ${globalCode};
 
-                while (Date.now() < end) {
-                    ${code};
-                    ops++;
-                }
-                return { index, ops };
-            })()`);
-            resultsTestCases.push(result);
-        } catch (e) {
-            resultsTestCases.push({ index, ops: `error` });
-        }
+            while (Date.now() < end) {
+                ${code};
+                ops++;
+            }
+            ops = ops * 10;
+            return { ops };
+        })()`);
+
+        self.postMessage(result);
+    } catch (e) {
+        self.postMessage({ops: `error`});
+        console.error(e);
     }
-
-    self.postMessage(resultsTestCases);
 }
