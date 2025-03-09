@@ -48,15 +48,17 @@
 .code-side .Globals .controls .save-url {
     border-radius: 0 20px 20px 0;
 }
-.code-side textarea{
+.code-side .code .highlighted-code, .code-side .code{
     background: var(--second-color);
     padding: var(--basic-padding);
-    color: var(--text-color);
     field-sizing: content;
     border-radius: 10px;
     resize: none;
     width: 100%;
     font-size: 1.5rem;
+}
+.code-side .code{
+    background: none;
 }
 .code-side .test-cases{
     flex-grow: 1;

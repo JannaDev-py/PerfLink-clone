@@ -6,7 +6,7 @@ const $btnRunTestCases = document.getElementById('run-test');
 
 function runTestCases(code){
     const worker = new Worker('../public/worker.js'); //create a worker for each test case
-    const globalCode = document.querySelector('#global-textarea').textContent;
+    const globalCode = document.querySelector('#global-textarea .highlighted-code').textContent;
     
     worker.postMessage({code, globalCode});    
 
@@ -25,10 +25,11 @@ function addEventsToTestCases($testCase){
     const notChekedCopySvg = $copySvg.innerHTML; //get default svg
 
     $copySvg.addEventListener('click', ()=>{
-        navigator.clipboard.writeText($testCase.querySelector('textarea').value); //copy the text wuth clipboard.writeText
+        navigator.clipboard.writeText($testCase.querySelector('.code .highlighted-code').textContent); //copy the text wuth clipboard.writeText
 
         $copySvg.innerHTML = 
             `<svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-clipboard-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 14l2 2l4 -4" /></svg>`;
+
         setTimeout(()=>{$copySvg.innerHTML = notChekedCopySvg}, 2000);
     });
 
@@ -53,7 +54,7 @@ function executeTestCasesUX(){
     $rectSVG.forEach(rect => rect.style.height = '0');
     
     //get every code of the test cases and run the funciton runTestCases for each test case code and add the result to the array
-    const testCasesCode = document.querySelectorAll('.test-case-textarea');
+    const testCasesCode = document.querySelectorAll('.test-case-textarea .highlighted-code');
     let resultsTestCases = [];
     
     //become node list to array
@@ -61,7 +62,7 @@ function executeTestCasesUX(){
 
     //make an array of promises
     const promises = testCasesArray.map((testCaseCode, index) => {
-        return runTestCases(testCaseCode.value)
+        return runTestCases(testCaseCode.textContent)
             .then(result => {
                 const ops = result.ops;
                 resultsTestCases.push({ index, ops });
@@ -82,6 +83,7 @@ function executeTestCasesUX(){
 $btnAddTestCase.addEventListener('click', ()=>{    
     const $testCase = innerTestCase();  //call the function inside a variable to get the current test case created
     addEventsToTestCases($testCase); //call the function to add the events to the test case created
+    updateCodeHighlight($testCase.querySelector('.code'));
     setGraph(); //call the function to set the graph everytime a test case is created
 });
 
@@ -92,8 +94,12 @@ $btnRunTestCases.addEventListener('click', ()=>{
 
 //on init we need to set the graph and run the test cases
 document.addEventListener(`DOMContentLoaded`, ()=>{
+    updateCodeHighlight(document.querySelector("#global-textarea"));
+    document.querySelectorAll('.test-case').forEach(testCase => {
+        addEventsToTestCases(testCase);
+        updateCodeHighlight(testCase.querySelector('.code'));
+    }); //select all test cases that exists on the page add start
     executeTestCasesUX();
-    document.querySelectorAll('.test-case').forEach(testCase => addEventsToTestCases(testCase)); //select all test cases that exists on the page add start
     setGraph();
 });
 

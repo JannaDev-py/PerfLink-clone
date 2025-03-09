@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <link rel="stylesheet" href="assets/styles/highlight.css">
     <link rel="stylesheet" href="assets/styles/animations.css">
     <link rel="stylesheet" href="../src/components/code-side/code-side.css">
     <link rel="stylesheet" href="../src/components/test-case/test-case.css">
     <link rel="stylesheet" href="../src/components/graph-side/graph-side.css">
     
     <link rel="stylesheet" href="assets/styles/main.css">
+    <script src="../src/utils/highlight.js"></script>
 
     <script src="../src/index.js" type="module"></script>
     <title>BenchMark</title>
@@ -34,7 +36,7 @@
                     </button>
                 </div>    
             </header>
-            <textarea name="global-code" id="global-textarea"> const data = [...Array(1000).keys()]</textarea>
+            <div aria-label="global-code" id="global-textarea" class="code" contenteditable="true"> const data = [...Array(1000).keys()]</div>
         </div>
         <div class="test-cases">
             <header class="test-cases-header">
@@ -62,7 +64,7 @@
                             </svg>
                         </div>
                     </header>
-                    <textarea name="textarea-test-case" id="test-case-textarea-1" class="test-case-textarea">data.find(x => x == 100)</textarea>
+                    <div aria-label="textarea-test-case" id="test-case-textarea-1" class="code test-case-textarea" contenteditable="true"> data.find(x => x == 100)</div>
                 </div>
                 <div class="test-case" data-value="2">
                     <header>
@@ -84,7 +86,7 @@
                             </svg>
                         </div>
                     </header>
-                    <textarea name="textarea-test-case" id="test-case-textarea-2" class="test-case-textarea">data.find(x => x == 300)</textarea>
+                    <div aria-label="textarea-test-case" id="test-case-textarea-2" class="code test-case-textarea" contenteditable="true"> data.find(x => x == 300)</div>
                 </div>
                 <div class="test-case" data-value="3">
                     <header>
@@ -106,7 +108,7 @@
                             </svg>
                         </div>
                     </header>
-                    <textarea name="textarea-test-case" id="test-case-textarea-3" class="test-case-textarea">data.find(x => x == 700)</textarea>
+                    <div aria-label="textarea-test-case" id="test-case-textarea-3" class="code test-case-textarea" contenteditable="true"> data.find(x => x == 900)</div>
                 </div>
             </div>
         </div>
