@@ -46,6 +46,9 @@
 .highlight-string{
     color: var(--highlight-string);
 }
+.highlight-string span{
+    color: var(--highlight-string);
+}
 .highlight-symbol{
     color: var(--highlight-symbol);
 }
