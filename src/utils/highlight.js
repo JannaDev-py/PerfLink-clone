@@ -77,7 +77,7 @@ function updateCodeHighlight(el){
 }
 
 function setHighlight(el){
-    const symbolRegex = /(?<!<[^>]*)[;=+\-{}\[\]\(\)$\.>]|(&gt;)|(&lt;)/g;   // symbols "><" there no like that in the code are &gt; and &lt;
+    const symbolRegex = /(?<!<[^>]*)(?<!&nbsp)[;=+\-{}\[\]\(\)$\.>]|(&gt;)|(&lt;)/g; // symbols "><" there no like that in the code are &gt; and &lt;
     const stringRegex = /["'`](.*?)["'`]/g;
     const commentRegex = /(\/\/.*?<br>)|(\/\/.*\s)|(\/\*[\s\S]*?\*\/)/g;
 

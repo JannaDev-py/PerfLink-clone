@@ -51,14 +51,15 @@
 .code-side .code .highlighted-code, .code-side .code{
     background: var(--second-color);
     padding: var(--basic-padding);
-    field-sizing: content;
     border-radius: 10px;
-    resize: none;
-    width: 100%;
+    min-width: 100%;
+    width: auto;
     font-size: 1.5rem;
+    white-space: nowrap;
 }
 .code-side .code{
     background: none;
+    overflow-x: auto;
 }
 .code-side .test-cases{
     flex-grow: 1;
