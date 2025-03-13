@@ -9,7 +9,7 @@ export function createTestCase() {
         <header>
             <div class="left">
                 <p class="test-case-number">1</p>
-                <label for="test-case-textarea" class="test-case-label">Test Case</label>
+                <label for="test-case-textarea-1" class="test-case-label">Test Case</label>
             </div>
             <div class="right">
                 <p class="ops">
@@ -27,7 +27,7 @@ export function createTestCase() {
                 </svg>
             </div>
         </header>
-        <div aria-label="textarea-test-case" id="test-case-textarea-1" class="code test-case-textarea" contenteditable="true"></div>`
+        <div aria-label="textarea-test-case" id="test-case-textarea-1" class="code test-case-textarea" contenteditable="true" role="textbox"></div>`
         return $testCase;
 }
 

@@ -91,6 +91,7 @@ $btnSaveOnThisUrl.addEventListener('click', ()=>{
     const testCasesCode = document.querySelectorAll('.test-case-textarea .highlighted-code');
 
     if(location.href.split('?')[1]){
+        //if there a query string, save the data on the object store correpondly
         saveDataIndexedDB(globalCode, testCasesCode, location.href.split('?')[1]);
     }else{
         saveDataIndexedDB(globalCode, testCasesCode, 1);
@@ -124,15 +125,17 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
         document.querySelectorAll('.test-case').forEach(testCase => {
             addEventsToTestCases(testCase);
             updateCodeHighlight(testCase.querySelector('.code'));
-        }); //select all test cases that exists on the page add start
+        }); //select all test cases that exists on the page at start
         executeTestCasesUX();
         setGraph();
     }
 
     getDataIndexedDB(countPageUrl).then(data=>{
         if(data === null){
+            //if data is null means, there are not a database
             codeExecute();
         }else{
+            //we will modified the test cases before run it and set the graph
             const testCaseCodeNode = document.querySelectorAll(".test-case .code");
             const dataCodeTestCaseLength = data.codeTestCaseStorage.length;
 
@@ -147,18 +150,23 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
             }else if(dataCodeTestCaseLength < testCaseCodeNode.length){
                 //delete test cases if there are more test cases than data storage
                 for (let i = (testCaseCodeNode.length - dataCodeTestCaseLength) - 2; i >= 0; i--) {
+                    const nodeToRemove = document.querySelectorAll('.test-case')[i];
                     const $containerTestCase = document.querySelector('.test-cases-container');
-                    $containerTestCase.removeChild(document.querySelectorAll('.test-case')[i]);
-                    setTestCaseValuesByDelete();
-                    setGraph(); 
+                    if($containerTestCase.contains(nodeToRemove)){
+                        $containerTestCase.removeChild(nodeToRemove);
+                        setTestCaseValuesByDelete();
+                        setGraph(); 
+                    }
                 }
-
+                
+                //delete final test case using just querySelector, because if there just one test case querySelectorAll dont returns a node 
                 const $containerTestCase = document.querySelector('.test-cases-container');
                 $containerTestCase.removeChild(document.querySelector('.test-case'));
                 setTestCaseValuesByDelete();
                 setGraph();
             }
             
+            //call the node again beacuase it will be modifier than the testCaseCodeNode called at start
             const testCaseCodeNodeUpdate = document.querySelectorAll(".test-case .code");
             //set storage values
             document.querySelector("#global-textarea").innerHTML = data.globalCodeStorage;
@@ -166,6 +174,9 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
                 code.textContent = data.codeTestCaseStorage[index];
             });
             
+            //reset container test cases
+            const $containerTestCase = document.querySelector('.test-cases-container');
+            $containerTestCase.innerHTML = $containerTestCase.innerHTML;
             codeExecute();
         }
     })
