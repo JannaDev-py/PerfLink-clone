@@ -2,21 +2,7 @@ import { innerTestCase, setTestCaseValuesByDelete } from './components/test-case
 import { setGraph, setGraphValues } from './components/graph-side/graph-side.js';
 import { createNewUrl, saveDataIndexedDB, getDataIndexedDB } from './app.js';
 
-const $btnAddTestCase = document.querySelector('#add-test-case');
-const $btnRunTestCases = document.getElementById('run-test');
-
-const $btnSaveUrl = document.getElementById('save-url');
 let countPageUrl = 1;
-
-$btnSaveUrl.addEventListener('click', ()=>{
-    const currentSvg = $btnSaveUrl.innerHTML;
-    $btnSaveUrl.innerHTML = 
-        `<svg width="20" height="20" viewBox="0 0 10 16" aria-hidden="true" stroke="currentColor"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 00-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 002 1a1.993 1.993 0 00-1 3.72V6.5l3 3v1.78A1.993 1.993 0 005 15a1.993 1.993 0 001-3.72V9.5l3-3V4.72A1.993 1.993 0 008 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg> `;
-    setTimeout(()=>{$btnSaveUrl.innerHTML = currentSvg}, 2000);
-
-    window.open(createNewUrl(countPageUrl), "_blank");
-    history.back();
-});
 
 function runTestCases(code){
     const worker = new Worker('../public/worker.js'); //create a worker for each test case
@@ -87,17 +73,37 @@ function executeTestCasesUX(){
     //when all promises are resolved we can use resultsTestCases to set the graph
     Promise.all(promises)
     .then(() => {
-            const globalCode = document.querySelector('#global-textarea .highlighted-code').textContent;
-            saveDataIndexedDB(globalCode, testCasesCode, countPageUrl);
             setGraphValues(resultsTestCases);
-            countPageUrl++;
         })
         .catch(error => {
             console.error('Ocurrió un error:', error);
         });
 }
 
+const $btnSaveOnThisUrl = document.querySelector('.save-url');
+$btnSaveOnThisUrl.addEventListener('click', ()=>{
+    const currentSvg = $btnSaveOnThisUrl.innerHTML;
+    $btnSaveOnThisUrl.innerHTML = 
+        `<svg width="20" height="20" viewBox="0 0 10 16" aria-hidden="true" stroke="currentColor"><path fill-rule="evenodd" d="M8 1a1.993 1.993 0 00-1 3.72V6L5 8 3 6V4.72A1.993 1.993 0 002 1a1.993 1.993 0 00-1 3.72V6.5l3 3v1.78A1.993 1.993 0 005 15a1.993 1.993 0 001-3.72V9.5l3-3V4.72A1.993 1.993 0 008 1zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3 10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zm3-10c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg> `;
+    setTimeout(()=>{$btnSaveOnThisUrl.innerHTML = currentSvg}, 2000);
 
+    const globalCode = document.querySelector('#global-textarea .highlighted-code').innerText;
+    const testCasesCode = document.querySelectorAll('.test-case-textarea .highlighted-code');
+
+    if(location.href.split('?')[1]){
+        saveDataIndexedDB(globalCode, testCasesCode, location.href.split('?')[1]);
+    }else{
+        saveDataIndexedDB(globalCode, testCasesCode, 1);
+    }
+});
+
+const $btnOpenWindow = document.querySelector('.save-url-open-window');
+$btnOpenWindow.addEventListener('click', ()=>{
+    window.open(createNewUrl(countPageUrl), "_blank");
+    history.back();
+});
+
+const $btnAddTestCase = document.querySelector('#add-test-case');
 $btnAddTestCase.addEventListener('click', ()=>{    
     const $testCase = innerTestCase();  //call the function inside a variable to get the current test case created
     addEventsToTestCases($testCase); //call the function to add the events to the test case created
@@ -105,6 +111,7 @@ $btnAddTestCase.addEventListener('click', ()=>{
     setGraph(); //call the function to set the graph everytime a test case is created
 });
 
+const $btnRunTestCases = document.getElementById('run-test');
 $btnRunTestCases.addEventListener('click', ()=>{
     executeTestCasesUX();
     $btnRunTestCases.classList.remove('run-test-animation');
@@ -126,12 +133,39 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
         if(data === null){
             codeExecute();
         }else{
-            document.querySelector("#global-textarea").textContent = data.globalCodeStorage;
+            const testCaseCodeNode = document.querySelectorAll(".test-case .code");
+            const dataCodeTestCaseLength = data.codeTestCaseStorage.length;
 
-            document.querySelectorAll('.test-case .code').forEach((code , index) => {
-                data.codeTestCaseStorage[0] = "data.find(x => x == 900)"
+            if(testCaseCodeNode.length < dataCodeTestCaseLength){
+                //add test cases if there are more data storage than test cases
+                for(let i = 0; i < (dataCodeTestCaseLength - testCaseCodeNode.length); i++){
+                    const $testCase = innerTestCase();  
+                    addEventsToTestCases($testCase); 
+                    updateCodeHighlight($testCase.querySelector('.code'));
+                    setGraph(); 
+                }
+            }else if(dataCodeTestCaseLength < testCaseCodeNode.length){
+                //delete test cases if there are more test cases than data storage
+                for (let i = (testCaseCodeNode.length - dataCodeTestCaseLength) - 2; i >= 0; i--) {
+                    const $containerTestCase = document.querySelector('.test-cases-container');
+                    $containerTestCase.removeChild(document.querySelectorAll('.test-case')[i]);
+                    setTestCaseValuesByDelete();
+                    setGraph(); 
+                }
+
+                const $containerTestCase = document.querySelector('.test-cases-container');
+                $containerTestCase.removeChild(document.querySelector('.test-case'));
+                setTestCaseValuesByDelete();
+                setGraph();
+            }
+            
+            const testCaseCodeNodeUpdate = document.querySelectorAll(".test-case .code");
+            //set storage values
+            document.querySelector("#global-textarea").innerHTML = data.globalCodeStorage;
+            testCaseCodeNodeUpdate.forEach((code , index) => {
                 code.textContent = data.codeTestCaseStorage[index];
             });
+            
             codeExecute();
         }
     })

@@ -45,7 +45,7 @@
 .run-test-animation{
     animation: blink 1s infinite;
 }
-.code-side .Globals .controls .save-url {
+.code-side .Globals .controls .save-url-open-window {
     border-radius: 0 20px 20px 0;
 }
 .code-side .code .highlighted-code, .code-side .code{
