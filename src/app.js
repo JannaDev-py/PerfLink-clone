@@ -4,19 +4,30 @@ export function createNewUrl(count){
 }
 
 export function saveDataIndexedDB(globalCode, testCasesCode, dataBaseVersion, pageNumber){
-    const IDBrequest = window.indexedDB.open("PerfLink", dataBaseVersion);
+    return new Promise((resolve, reject) => {
+        const IDBrequest = window.indexedDB.open("PerfLink", dataBaseVersion);
+    
+        IDBrequest.onsuccess = function (event) {
+            const db = event.target.result;
+    
+            const IDBtransaction = db.transaction(`page-${pageNumber}`, "readwrite");
+            const objectStore = IDBtransaction.objectStore(`page-${pageNumber}`);
+    
+            const testCasesCodeArray = Array.from(testCasesCode)
+            const codeTestCase = testCasesCodeArray.map(code => { return code.textContent});
+    
+            objectStore.put({ globalCode, codeTestCase }, 0);
+            resolve(true);
 
-    IDBrequest.onsuccess = function (event) {
-        const db = event.target.result;
+            IDBtransaction.oncomplete = function () {
+                db.close();
+            }
+        }
 
-        const IDBtransaction = db.transaction(`page-${pageNumber}`, "readwrite");
-        const objectStore = IDBtransaction.objectStore(`page-${pageNumber}`);
-
-        const testCasesCodeArray = Array.from(testCasesCode)
-        const codeTestCase = testCasesCodeArray.map(code => { return code.textContent});
-
-        objectStore.put({ globalCode, codeTestCase }, 0);
-    }
+        IDBrequest.onerror = function (event) {
+            reject(event.target.error);
+        };
+    })
 }
 
 export function getDataIndexedDB(dataBaseVersion, pageNumber) {
@@ -50,6 +61,10 @@ export function getDataIndexedDB(dataBaseVersion, pageNumber) {
             objectStore.getAll().onerror = function (event) {
                 reject(event.target.error);
             };
+
+            IDBtransaction.oncomplete = function () {
+                db.close();
+            }
         };
 
         IDBrequest.onerror = function (event) {
