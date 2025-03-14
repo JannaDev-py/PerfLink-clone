@@ -46,7 +46,7 @@
 .highlight-string{
     color: var(--highlight-string);
 }
-.highlight-string span{
+.highlight-string .highlight-keyword{
     color: var(--highlight-string);
 }
 .highlight-symbol{

@@ -2,8 +2,6 @@ import { innerTestCase, setTestCaseValuesByDelete } from './components/test-case
 import { setGraph, setGraphValues } from './components/graph-side/graph-side.js';
 import { createNewUrl, saveDataIndexedDB, getDataIndexedDB } from './app.js';
 
-let countPageUrl = 1;
-
 function runTestCases(code){
     const worker = new Worker('../public/worker.js'); //create a worker for each test case
     const globalCode = document.querySelector('#global-textarea .highlighted-code').textContent;
@@ -90,17 +88,18 @@ $btnSaveOnThisUrl.addEventListener('click', ()=>{
     const globalCode = document.querySelector('#global-textarea .highlighted-code').innerText;
     const testCasesCode = document.querySelectorAll('.test-case-textarea .highlighted-code');
 
-    if(location.href.split('?')[1]){
-        //if there a query string, save the data on the object store correpondly
-        saveDataIndexedDB(globalCode, testCasesCode, location.href.split('?')[1]);
-    }else{
-        saveDataIndexedDB(globalCode, testCasesCode, 1);
-    }
+    let nextDataBaseVersion = Number(localStorage.getItem('dataBaseVersion')) + 1;
+    let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;
+    localStorage.setItem('dataBaseVersion', nextDataBaseVersion);
+
+    saveDataIndexedDB(globalCode, testCasesCode, nextDataBaseVersion, currentPage);
 });
 
 const $btnOpenWindow = document.querySelector('.save-url-open-window');
 $btnOpenWindow.addEventListener('click', ()=>{
-    window.open(createNewUrl(countPageUrl), "_blank");
+    localStorage.setItem('dataBaseVersion', Number(localStorage.getItem('dataBaseVersion')) + 1);
+    localStorage.setItem('pageCount', Number(localStorage.getItem('pageCount')) + 1);
+    window.open(createNewUrl(Number(localStorage.getItem('pageCount'))), "_blank");
     history.back();
 });
 
@@ -130,7 +129,16 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
         setGraph();
     }
 
-    getDataIndexedDB(countPageUrl).then(data=>{
+    if(localStorage.getItem('dataBaseVersion') === null){
+        localStorage.setItem('dataBaseVersion', 1);
+    }
+    if(localStorage.getItem('pageCount') === null){
+        localStorage.setItem('pageCount', 1);
+    }
+
+    let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;
+
+    getDataIndexedDB(Number(localStorage.getItem('dataBaseVersion')), currentPage).then(data=>{
         if(data === null){
             //if data is null means, there are not a database
             codeExecute();

@@ -3,14 +3,14 @@ export function createNewUrl(count){
     return window.location.href
 }
 
-export function saveDataIndexedDB(globalCode, testCasesCode, count){
-    const IDBrequest = window.indexedDB.open("PerfLink", count);
+export function saveDataIndexedDB(globalCode, testCasesCode, dataBaseVersion, pageNumber){
+    const IDBrequest = window.indexedDB.open("PerfLink", dataBaseVersion);
 
     IDBrequest.onsuccess = function (event) {
         const db = event.target.result;
 
-        const IDBtransaction = db.transaction(`page-${count}`, "readwrite");
-        const objectStore = IDBtransaction.objectStore(`page-${count}`);
+        const IDBtransaction = db.transaction(`page-${pageNumber}`, "readwrite");
+        const objectStore = IDBtransaction.objectStore(`page-${pageNumber}`);
 
         const testCasesCodeArray = Array.from(testCasesCode)
         const codeTestCase = testCasesCodeArray.map(code => { return code.textContent});
@@ -19,22 +19,22 @@ export function saveDataIndexedDB(globalCode, testCasesCode, count){
     }
 }
 
-export function getDataIndexedDB(count) {
+export function getDataIndexedDB(dataBaseVersion, pageNumber) {
     return new Promise((resolve, reject) => {
-        const IDBrequest = window.indexedDB.open("PerfLink", count);
+        const IDBrequest = window.indexedDB.open("PerfLink", dataBaseVersion);
 
         IDBrequest.onupgradeneeded = function (event) {
             const db = event.target.result;
-            if (!db.objectStoreNames.contains(`page-${count}`)) {
-                db.createObjectStore(`page-${count}`, { autoIncrement: true })
+            if (!db.objectStoreNames.contains(`page-${pageNumber}`)) {
+                db.createObjectStore(`page-${pageNumber}`, { autoIncrement: true })
                 resolve(null);
             }
         };
 
         IDBrequest.onsuccess = function (event) {
             const db = event.target.result;
-            const IDBtransaction = db.transaction(`page-${count}`, "readonly");
-            const objectStore = IDBtransaction.objectStore(`page-${count}`);
+            const IDBtransaction = db.transaction(`page-${pageNumber}`, "readonly");
+            const objectStore = IDBtransaction.objectStore(`page-${pageNumber}`);
 
             objectStore.getAll().onsuccess = function (event) {
                 const data = event.target.result;
