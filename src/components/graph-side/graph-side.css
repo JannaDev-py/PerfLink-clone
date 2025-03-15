@@ -14,6 +14,45 @@
 .graph-side svg rect{
     transition: height 0.5s;
 }
+.graph-side button{
+    margin: 10px;
+    border-radius: 10px;
+    position: absolute;
+    padding: 10px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+.graph-side button div{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.graph-side button div::after{
+    position: absolute;
+    display: block;
+    content: '1';
+    top: -8px;
+    right: -8px;
+    width: 17px;
+    height: 17px;
+    border-radius: 100%;
+    background: #f21;
+    color: #fff;
+}
+.graph-side .history{
+    top: 0;
+    right: 60px;
+}
+.graph-side .terminal{
+    top: 0;
+    right: 0;
+    z-index: 10;
+}
+
 .graph-side .numbers{
     width: 400px;
     margin-top: 20px;
@@ -31,7 +70,6 @@
     flex-direction: column;
     gap: 20px;
 }
-
 .graph-side .numbers span{
     position: relative;
     display: flex;
