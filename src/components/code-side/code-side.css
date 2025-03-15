@@ -48,19 +48,6 @@
 .code-side .Globals .controls .save-url-open-window {
     border-radius: 0 20px 20px 0;
 }
-.code-side .code .highlighted-code, .code-side .code{
-    background: var(--second-color);
-    padding: var(--basic-padding);
-    border-radius: 10px;
-    min-width: 100%;
-    width: auto;
-    font-size: 1.5rem;
-    white-space: nowrap;
-}
-.code-side .code{
-    background: none;
-    overflow-x: auto;
-}
 .code-side .test-cases{
     flex-grow: 1;
     display: flex;
@@ -82,7 +69,7 @@
     display: flex;
     justify-content: space-between;
 }
-.code-side .test-cases header button{
+.code-side .test-cases header button:not(.copy-container, .delete-container){
     border-radius: 20px;
     font-size: 1.1rem;
 }

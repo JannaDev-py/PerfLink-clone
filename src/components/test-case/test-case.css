@@ -31,10 +31,20 @@
     background: var(--third-color);
     padding: 4px;
 }
-
-
-.code-side .test-cases .test-case textarea{
-    background: var(--text-area-color);
-    border-radius: 0 0 10px 10px;
-    left: 0;
+.code-side .test-cases .test-cases-container .test-case .right button{
+    background: transparent;
+    color: var(--text-color);
+}
+.code-side .code .highlighted-code, .code-side .code{
+    background: var(--second-color);
+    padding: var(--basic-padding);
+    border-radius: 10px;
+    min-width: 100%;
+    width: auto;
+    font-size: 1.5rem;
+    white-space: nowrap;
+}
+.code-side .code{
+    background: none;
+    overflow-x: auto;
 }
