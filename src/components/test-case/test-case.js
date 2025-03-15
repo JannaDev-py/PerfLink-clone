@@ -29,7 +29,7 @@ export function createTestCase() {
                 </button>
             </div>
         </header>
-        <div aria-label="textarea-test-case" id="test-case-textarea-1" class="code test-case-textarea" contenteditable="true" role="textbox"></div>`
+        <output aria-label="textarea-test-case" id="test-case-textarea-1" class="code test-case-textarea" contenteditable="true" role="textbox"></output>`
         return $testCase;
 }
 

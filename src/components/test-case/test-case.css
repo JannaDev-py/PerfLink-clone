@@ -38,7 +38,7 @@
 .code-side .code .highlighted-code, .code-side .code{
     background: var(--second-color);
     padding: var(--basic-padding);
-    border-radius: 10px;
+    border-radius: 0 0 10px 10px;
     min-width: 100%;
     width: auto;
     font-size: 1.5rem;

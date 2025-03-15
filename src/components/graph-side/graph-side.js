@@ -70,3 +70,6 @@ export function setGraphValues(data){
         }
     });
 }
+
+export function setHistory(){
+}

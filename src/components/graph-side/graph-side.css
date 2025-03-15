@@ -8,13 +8,13 @@
     background: var(--graph-side-color);
     padding: 50px;
 }
-.graph-side svg{
+.graph-side .graph-svg{
     transform: rotate(180deg);
 }
 .graph-side svg rect{
     transition: height 0.5s;
 }
-.graph-side button{
+.graph-side .history, .graph-side .terminal{
     margin: 10px;
     border-radius: 10px;
     position: absolute;
@@ -51,6 +51,80 @@
     top: 0;
     right: 0;
     z-index: 10;
+}
+
+.graph-side .history-modal{
+    box-shadow: 0 0 5px 0 var(--primary-color);
+    border: var(--primary-color) 2px solid;
+    background: var(--third-color);
+    border-radius: 20px;
+    position: absolute;
+    width: 300px;
+    height: 350px;
+    z-index: 11;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+}
+.graph-side .history-modal .search-input{
+    width: 100%;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    padding: 15px;
+    gap: 10px;
+}
+.graph-side .history-modal .search-input svg{
+    position: absolute;
+    top: calc(80% - 15px);
+    left: 17%;
+    width: 15px;
+    height: 15px;
+}
+.graph-side .history-modal .search-input label{
+    width: 80%;
+    font-size: 15px;
+}
+.graph-side .history-modal .search-input input{
+    box-shadow: 0 0 5px 0 var(--primary-color);
+    border: var(--primary-color) 2px solid;
+    padding: 5px 10px 5px 30px;
+    color: var(--text-color);
+    background: transparent;
+    border-radius: 10px;
+    border: none;
+    width: 80%;
+}
+.graph-side .history-modal nav{
+    width: 100%;
+}
+.graph-side .history-modal nav ul{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.graph-side .history-modal nav ul li{
+    width: 80%;
+    padding: 10px 5px;
+    position: relative;
+    font-size: max(1.3vw, 1.2rem);
+    border-bottom: 2px solid var(--primary-color);
+}
+.graph-side .history-modal nav ul li a{
+    color: var(--text-color);
+    cursor: pointer;
+}
+.graph-side .history-modal nav ul li button{
+    color: var(--primary-color);
+    background: transparent;
+    position: absolute;
+    cursor: pointer;
+    right: 0;
 }
 
 .graph-side .numbers{
