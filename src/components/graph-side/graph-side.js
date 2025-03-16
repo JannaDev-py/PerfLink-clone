@@ -72,4 +72,47 @@ export function setGraphValues(data){
 }
 
 export function setHistory(){
+    const historyStorage = localStorage.getItem('pageCount');
+    const $historyModal = document.querySelector('.history-modal');
+    const $historyModalUl = $historyModal.querySelector('ul');
+    let fragment = document.createDocumentFragment();
+
+    if(historyStorage !== null){
+        const href = location.href.split("?")[0];
+        
+        for(let i = 1; i <= historyStorage; i++){
+            const li = document.createElement('li');
+            li.innerHTML += `
+            <a href="${href}?${i}">Archive ${i}</a>
+            <button delete-archive aria-label="delete archive" title="delete archive">
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-database-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6c0 1.657 3.582 3 8 3s8 -1.343 8 -3s-3.582 -3 -8 -3s-8 1.343 -8 3" /><path d="M4 6v6c0 1.657 3.582 3 8 3c.537 0 1.062 -.02 1.57 -.058" /><path d="M20 13.5v-7.5" /><path d="M4 12v6c0 1.657 3.582 3 8 3c.384 0 .762 -.01 1.132 -.03" /><path d="M22 22l-5 -5" /><path d="M17 22l5 -5" /></svg>
+            </button>`;
+
+            const button = li.querySelector('button');
+            button.addEventListener("click", ()=>{
+                $historyModalUl.removeChild(li);
+
+                localStorage.setItem('dataBaseVersion', (Number(localStorage.getItem('dataBaseVersion')) + 1));
+                localStorage.setItem('pageCount', Number(localStorage.getItem('pageCount')) - 1);
+                if(Number(localStorage.getItem('pageCount')) === 0){
+                    localStorage.setItem('pageCount', 1);
+                }
+
+                const indexedDB = window.indexedDB.open("PerfLink", Number(localStorage.getItem('dataBaseVersion')));
+                indexedDB.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                
+                    if (db.objectStoreNames.contains(`page-${i}`)) {
+                        db.deleteObjectStore(`page-${i}`);
+                    }
+
+                    db.close();
+                };
+                localStorage.setItem('dataBaseVersion', (Number(localStorage.getItem('dataBaseVersion')) + 1));
+            })
+
+            fragment.appendChild(li);
+        }
+        $historyModalUl.appendChild(fragment);
+    }
 }

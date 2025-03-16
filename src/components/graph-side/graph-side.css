@@ -102,6 +102,9 @@
 }
 .graph-side .history-modal nav{
     width: 100%;
+    flex-grow: 1;
+    overflow-y: auto;
+    scrollbar-color: var(--primary-color) transparent;
 }
 .graph-side .history-modal nav ul{
     display: flex;

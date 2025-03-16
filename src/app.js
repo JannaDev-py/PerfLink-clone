@@ -36,6 +36,7 @@ export function getDataIndexedDB(dataBaseVersion, pageNumber) {
 
         IDBrequest.onupgradeneeded = function (event) {
             const db = event.target.result;
+            console.log("onupgradeneeded");
             if (!db.objectStoreNames.contains(`page-${pageNumber}`)) {
                 db.createObjectStore(`page-${pageNumber}`, { autoIncrement: true })
                 resolve(null);
@@ -44,26 +45,31 @@ export function getDataIndexedDB(dataBaseVersion, pageNumber) {
 
         IDBrequest.onsuccess = function (event) {
             const db = event.target.result;
-            const IDBtransaction = db.transaction(`page-${pageNumber}`, "readonly");
-            const objectStore = IDBtransaction.objectStore(`page-${pageNumber}`);
-
-            objectStore.getAll().onsuccess = function (event) {
-                const data = event.target.result;
-                if (data.length > 0) {
-                    const globalCodeStorage = data[0].globalCode;
-                    const codeTestCaseStorage = data[0].codeTestCase;
-                    resolve({ globalCodeStorage, codeTestCaseStorage }); 
-                } else {
-                    resolve(null);
-                }
-            };
-
-            objectStore.getAll().onerror = function (event) {
-                reject(event.target.error);
-            };
-
-            IDBtransaction.oncomplete = function () {
-                db.close();
+            if(db.objectStoreNames.contains(`page-${pageNumber}`)){
+                const IDBtransaction = db.transaction(`page-${pageNumber}`, "readonly");
+                const objectStore = IDBtransaction.objectStore(`page-${pageNumber}`);
+    
+                objectStore.getAll().onsuccess = function (event) {
+                    const data = event.target.result;
+                    if (data.length > 0) {
+                        const globalCodeStorage = data[0].globalCode;
+                        const codeTestCaseStorage = data[0].codeTestCase;
+                        resolve({ globalCodeStorage, codeTestCaseStorage }); 
+                    } else {
+                        resolve(null);
+                    }
+                };
+    
+                objectStore.getAll().onerror = function (event) {
+                    reject(event.target.error);
+                };
+    
+                IDBtransaction.oncomplete = function () {
+                    db.close();
+                }    
+            }else{
+                localStorage.setItem('dataBaseVersion', Number(localStorage.getItem('dataBaseVersion')) + 1);
+                // getDataIndexedDB(Number(localStorage.getItem("dataBaseVersion")), pageNumber);
             }
         };
 

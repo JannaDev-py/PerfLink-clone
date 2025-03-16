@@ -1,5 +1,5 @@
 import { innerTestCase, setTestCaseValuesByDelete } from './components/test-case/test-case.js';
-import { setGraph, setGraphValues } from './components/graph-side/graph-side.js';
+import { setGraph, setGraphValues, setHistory } from './components/graph-side/graph-side.js';
 import { createNewUrl, saveDataIndexedDB, getDataIndexedDB } from './app.js';
 
 function runTestCases(code){
@@ -118,6 +118,7 @@ $btnRunTestCases.addEventListener('click', ()=>{
     $btnRunTestCases.classList.remove('run-test-animation');
 });
 
+setHistory();
 //on init we need to set the graph and run the test cases
 document.addEventListener(`DOMContentLoaded`, ()=>{
     const codeExecute = ()=>{
@@ -139,11 +140,10 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
 
     let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;
 
+    codeExecute();
+
     getDataIndexedDB(Number(localStorage.getItem('dataBaseVersion')), currentPage).then(data=>{
-        if(data === null){
-            //if data is null means, there are not a database
-            codeExecute();
-        }else{
+        if(data !== null){
             //we will modified the test cases before run it and set the graph
             const testCaseCodeNode = document.querySelectorAll(".test-case .code");
             const dataCodeTestCaseLength = data.codeTestCaseStorage.length;
