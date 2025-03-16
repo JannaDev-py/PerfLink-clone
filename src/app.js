@@ -6,6 +6,13 @@ export function createNewUrl(count){
 export function saveDataIndexedDB(globalCode, testCasesCode, dataBaseVersion, pageNumber){
     return new Promise((resolve, reject) => {
         const IDBrequest = window.indexedDB.open("PerfLink", dataBaseVersion);
+
+        IDBrequest.onupgradeneeded = function (event) {
+            const db = event.target.result;
+            if (!db.objectStoreNames.contains(`page-${pageNumber}`)) {
+                db.createObjectStore(`page-${pageNumber}`, { autoIncrement: true })
+            }
+        };
     
         IDBrequest.onsuccess = function (event) {
             const db = event.target.result;

@@ -76,6 +76,7 @@ export function setHistory(){
     const $historyModal = document.querySelector('.history-modal');
     const $historyModalUl = $historyModal.querySelector('ul');
     let fragment = document.createDocumentFragment();
+    $historyModalUl.innerHTML = '';
 
     if(historyStorage !== null){
         const href = location.href.split("?")[0];

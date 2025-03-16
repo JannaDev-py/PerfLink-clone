@@ -110,6 +110,7 @@ $btnSaveOnThisUrl.addEventListener('click', ()=>{
     saveDataIndexedDB(globalCode, testCasesCode, nextDataBaseVersion, currentPage).then(()=>{
         $btnSaveOnThisUrl.innerHTML = currentSvg;
     })
+    setHistory();
 });
 
 const $btnOpenWindow = document.querySelector('.save-url-open-window');
@@ -118,6 +119,7 @@ $btnOpenWindow.addEventListener('click', ()=>{
     localStorage.setItem('pageCount', Number(localStorage.getItem('pageCount')) + 1);
     window.open(createNewUrl(Number(localStorage.getItem('pageCount'))), "_blank");
     history.back();
+    setHistory();
 });
 
 const $btnAddTestCase = document.querySelector('#add-test-case');
@@ -139,6 +141,25 @@ $historyButton.addEventListener('click', ()=>{
     localStorage.setItem('historyButtonCounter', Number(localStorage.getItem('historyButtonCounter')) + 1);
     handleHistoryModal();
 });
+
+const $historyInputSearch = document.getElementById('search-archive');
+$historyInputSearch.addEventListener('input', (e)=>{
+    const $historyModalUl = document.querySelector('.history-modal nav ul');
+    const $li = $historyModalUl.querySelectorAll('li');
+    const searchInputValue = e.target.value;
+    const liTextContentArray = Array.from($li).map(li => (li.querySelector('a').textContent.toLowerCase()).includes(searchInputValue));
+
+    liTextContentArray.forEach((liTextContent, index) => {
+        if(!liTextContent){
+            $li[index].style.display = 'none';
+        }else{
+            $li[index].style.display = `flex`;
+        }
+    });
+    if(searchInputValue === ''){
+        setHistory();
+    }
+})
 
 //on init we need to set the graph and run the test cases
 document.addEventListener(`DOMContentLoaded`, ()=>{
@@ -164,13 +185,10 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
     }
 
     let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;
+    codeExecute();
 
     getDataIndexedDB(Number(localStorage.getItem('dataBaseVersion')), currentPage).then(data=>{
-        if(data == null){
-            //if data is null means, there are not a database, so we will execute the code
-            codeExecute();
-        }
-        else{
+        if(data !== null){
             //we will modified the test cases before run it and set the graph
             const testCaseCodeNode = document.querySelectorAll(".test-case .code");
             const dataCodeTestCaseLength = data.codeTestCaseStorage.length;
