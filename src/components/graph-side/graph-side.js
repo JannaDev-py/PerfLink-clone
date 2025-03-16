@@ -80,39 +80,50 @@ export function setHistory(){
     if(historyStorage !== null){
         const href = location.href.split("?")[0];
         
-        for(let i = 1; i <= historyStorage; i++){
-            const li = document.createElement('li');
-            li.innerHTML += `
-            <a href="${href}?${i}">Archive ${i}</a>
-            <button delete-archive aria-label="delete archive" title="delete archive">
-                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-database-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6c0 1.657 3.582 3 8 3s8 -1.343 8 -3s-3.582 -3 -8 -3s-8 1.343 -8 3" /><path d="M4 6v6c0 1.657 3.582 3 8 3c.537 0 1.062 -.02 1.57 -.058" /><path d="M20 13.5v-7.5" /><path d="M4 12v6c0 1.657 3.582 3 8 3c.384 0 .762 -.01 1.132 -.03" /><path d="M22 22l-5 -5" /><path d="M17 22l5 -5" /></svg>
-            </button>`;
+        const IDBrequest = window.indexedDB.open("PerfLink", Number(localStorage.getItem('dataBaseVersion')));
+        IDBrequest.onsuccess = function (event) {
+            const db = event.target.result;
+            let archiveNames = db.objectStoreNames;
+            db.close();
 
-            const button = li.querySelector('button');
-            button.addEventListener("click", ()=>{
-                $historyModalUl.removeChild(li);
+            for(const archiveName of archiveNames){
+                const li = document.createElement('li');
 
-                localStorage.setItem('dataBaseVersion', (Number(localStorage.getItem('dataBaseVersion')) + 1));
-                localStorage.setItem('pageCount', Number(localStorage.getItem('pageCount')) - 1);
-                if(Number(localStorage.getItem('pageCount')) === 0){
-                    localStorage.setItem('pageCount', 1);
-                }
-
-                const indexedDB = window.indexedDB.open("PerfLink", Number(localStorage.getItem('dataBaseVersion')));
-                indexedDB.onupgradeneeded = (event) => {
-                    const db = event.target.result;
+                li.innerHTML += `
+                <a href="${href}?${archiveName.split("-")[1]}">${archiveName.charAt(0).toUpperCase() + archiveName.slice(1)}</a>
+                <button delete-archive aria-label="delete archive" title="delete archive">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-database-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6c0 1.657 3.582 3 8 3s8 -1.343 8 -3s-3.582 -3 -8 -3s-8 1.343 -8 3" /><path d="M4 6v6c0 1.657 3.582 3 8 3c.537 0 1.062 -.02 1.57 -.058" /><path d="M20 13.5v-7.5" /><path d="M4 12v6c0 1.657 3.582 3 8 3c.384 0 .762 -.01 1.132 -.03" /><path d="M22 22l-5 -5" /><path d="M17 22l5 -5" /></svg>
+                </button>`;    
                 
-                    if (db.objectStoreNames.contains(`page-${i}`)) {
-                        db.deleteObjectStore(`page-${i}`);
+                const button = li.querySelector('button');
+                button.addEventListener("click", ()=>{
+                    $historyModalUl.removeChild(li);
+    
+                    localStorage.setItem('dataBaseVersion', (Number(localStorage.getItem('dataBaseVersion')) + 1));
+                    localStorage.setItem('pageCount', Number(localStorage.getItem('pageCount')) - 1);
+                    if(Number(localStorage.getItem('pageCount')) === 0){
+                        localStorage.setItem('pageCount', 1);
                     }
-
-                    db.close();
-                };
-                localStorage.setItem('dataBaseVersion', (Number(localStorage.getItem('dataBaseVersion')) + 1));
-            })
-
-            fragment.appendChild(li);
+    
+                    const indexedDB = window.indexedDB.open("PerfLink", Number(localStorage.getItem('dataBaseVersion')));
+                    indexedDB.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                    
+                        if (db.objectStoreNames.contains(archiveName)) {
+                            db.deleteObjectStore(archiveName);
+                        }
+                    };
+    
+                    indexedDB.onsuccess = (event) => {
+                        const db = event.target.result;
+                        db.close();
+                    };
+    
+                    localStorage.setItem('dataBaseVersion', (Number(localStorage.getItem('dataBaseVersion')) + 1));
+                })
+                fragment.appendChild(li);
+            }
+            $historyModalUl.appendChild(fragment);
         }
-        $historyModalUl.appendChild(fragment);
     }
 }

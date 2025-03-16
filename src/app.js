@@ -36,7 +36,6 @@ export function getDataIndexedDB(dataBaseVersion, pageNumber) {
 
         IDBrequest.onupgradeneeded = function (event) {
             const db = event.target.result;
-            console.log("onupgradeneeded");
             if (!db.objectStoreNames.contains(`page-${pageNumber}`)) {
                 db.createObjectStore(`page-${pageNumber}`, { autoIncrement: true })
                 resolve(null);

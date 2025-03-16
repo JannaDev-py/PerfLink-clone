@@ -78,6 +78,22 @@ function executeTestCasesUX(){
         });
 }
 
+function handleHistoryModal(){
+    const historyCounter = Number(localStorage.getItem('historyButtonCounter'));
+    const $historyModal = document.querySelector('.history-modal');
+
+    if(historyCounter%2 == 0){
+        $historyModal.style.display = 'none';
+        localStorage.setItem('historyButtonCounter', 0);
+        const $historyModalUl = $historyModal.querySelector('ul');
+        $historyModalUl.innerHTML = '';
+    }else{
+        $historyModal.style.display = 'flex';
+        setHistory();
+    }
+
+}
+
 const $btnSaveOnThisUrl = document.querySelector('.save-url');
 $btnSaveOnThisUrl.addEventListener('click', ()=>{
     const currentSvg = $btnSaveOnThisUrl.innerHTML;
@@ -118,7 +134,12 @@ $btnRunTestCases.addEventListener('click', ()=>{
     $btnRunTestCases.classList.remove('run-test-animation');
 });
 
-setHistory();
+const $historyButton = document.getElementById('history-button');
+$historyButton.addEventListener('click', ()=>{
+    localStorage.setItem('historyButtonCounter', Number(localStorage.getItem('historyButtonCounter')) + 1);
+    handleHistoryModal();
+});
+
 //on init we need to set the graph and run the test cases
 document.addEventListener(`DOMContentLoaded`, ()=>{
     const codeExecute = ()=>{
@@ -129,6 +150,7 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
         }); //select all test cases that exists on the page at start
         executeTestCasesUX();
         setGraph();
+        handleHistoryModal();
     }
 
     if(localStorage.getItem('dataBaseVersion') === null){
@@ -137,13 +159,18 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
     if(localStorage.getItem('pageCount') === null){
         localStorage.setItem('pageCount', 1);
     }
+    if(localStorage.getItem('historyButtonCounter') === null){
+        localStorage.setItem('historyButtonCounter', 0);
+    }
 
     let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;
 
-    codeExecute();
-
     getDataIndexedDB(Number(localStorage.getItem('dataBaseVersion')), currentPage).then(data=>{
-        if(data !== null){
+        if(data == null){
+            //if data is null means, there are not a database, so we will execute the code
+            codeExecute();
+        }
+        else{
             //we will modified the test cases before run it and set the graph
             const testCaseCodeNode = document.querySelectorAll(".test-case .code");
             const dataCodeTestCaseLength = data.codeTestCaseStorage.length;
