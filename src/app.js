@@ -7,6 +7,26 @@ export function saveDataIndexedDB(globalCode, testCasesCode, dataBaseVersion, pa
     return new Promise((resolve, reject) => {
         const IDBrequest = window.indexedDB.open("PerfLink", dataBaseVersion);
 
+        function getTextContentWithSpacesAndLineBreaks(element) {
+            let htmlContent = element.innerHTML;
+        
+            let tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlContent;
+        
+            let textContent = '';
+            tempDiv.childNodes.forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    textContent += node.textContent;
+                } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() === 'br') {
+                    textContent += '<br>';
+                } else {
+                    textContent += getTextContentWithSpacesAndLineBreaks(node);
+                }
+            });
+
+            return textContent;
+        }
+
         IDBrequest.onupgradeneeded = function (event) {
             const db = event.target.result;
             if (!db.objectStoreNames.contains(`page-${pageNumber}`)) {
@@ -20,8 +40,7 @@ export function saveDataIndexedDB(globalCode, testCasesCode, dataBaseVersion, pa
             const objectStore = IDBtransaction.objectStore(`page-${pageNumber}`);
     
             const testCasesCodeArray = Array.from(testCasesCode)
-            const codeTestCase = testCasesCodeArray.map(code => code.textContent);
-    
+            const codeTestCase = testCasesCodeArray.map(code => getTextContentWithSpacesAndLineBreaks(code));
             objectStore.put({ globalCode, codeTestCase }, 0);
             resolve(true);
 

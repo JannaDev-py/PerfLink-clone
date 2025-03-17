@@ -232,7 +232,7 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
             //set storage values
             document.querySelector("#global-textarea").innerHTML = data.globalCodeStorage;
             testCaseCodeNodeUpdate.forEach((code , index) => {
-                code.textContent = data.codeTestCaseStorage[index];
+                code.innerHTML = data.codeTestCaseStorage[index];
             });
             
             //reset container test cases

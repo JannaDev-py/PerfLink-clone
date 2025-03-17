@@ -30,7 +30,7 @@ function updateCodeHighlight(el){
 
             const div = el.querySelector("div");
             div.innerHTML = el.innerHTML;
-            div.innerHTML = setHighlight(div.textContent);
+            div.innerHTML = setHighlight(div.innerHTML.replace(/<div><\/div>/g, "")); //to get br or white space too
             div.classList.add("highlighted-code");
             div.setAttribute("contenteditable", "false");
             const highlightCodeDiv = el.querySelector(".highlighted-code"); 
@@ -70,7 +70,7 @@ function updateCodeHighlight(el){
             }})   
 
         }else {
-            el.innerHTML = setHighlight(el.textContent);
+            el.innerHTML = setHighlight(el.innerHTML);
             el.style.color = "var(--based-color-text)";
         }
     };
