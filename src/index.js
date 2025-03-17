@@ -96,6 +96,20 @@ function handleHistoryModal(){
 
 }
 
+function handleTerminalModal(){
+    const $terminalModal = document.querySelector('.terminal-modal');
+    const terminalModalCounter = Number(localStorage.getItem('terminalModalCounter'));
+
+    if(terminalModalCounter%2 == 0){
+        $terminalModal.classList.add("terminal-open");
+        $terminalModal.removeAttribute("inert");
+        localStorage.setItem('terminalModalCounter', 0);
+    }else{
+        $terminalModal.classList.remove("terminal-open")
+        $terminalModal.setAttribute("inert", "");
+    }
+}
+
 const $btnSaveOnThisUrl = document.querySelector('.save-url');
 $btnSaveOnThisUrl.addEventListener('click', ()=>{
     const currentSvg = $btnSaveOnThisUrl.innerHTML;
@@ -163,6 +177,12 @@ $historyInputSearch.addEventListener('input', (e)=>{
     }
 })
 
+const $terminalButton = document.getElementById('terminal-button');
+$terminalButton.addEventListener('click', ()=>{
+    localStorage.setItem('terminalModalCounter', Number(localStorage.getItem('terminalModalCounter')) + 1);
+    handleTerminalModal()
+});
+
 //on init we need to set the graph and run the test cases
 document.addEventListener(`DOMContentLoaded`, ()=>{
     const codeExecute = ()=>{
@@ -174,6 +194,7 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
         executeTestCasesUX();
         setGraph();
         handleHistoryModal();
+        handleTerminalModal();
     }
 
     if(localStorage.getItem('dataBaseVersion') === null){
@@ -183,7 +204,10 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
         localStorage.setItem('pageCount', 1);
     }
     if(localStorage.getItem('historyButtonCounter') === null){
-        localStorage.setItem('historyButtonCounter', 0);
+        localStorage.setItem('historyButtonCounter', 1);
+    }
+    if(localStorage.getItem('terminalModalCounter') === null){
+        localStorage.setItem('terminalModalCounter', 1);
     }
 
     let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;

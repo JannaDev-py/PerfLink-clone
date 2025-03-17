@@ -60,8 +60,8 @@ export function setGraphValues(data){
 
         $percentageOnContainer.textContent = `${percentageOnContainer}%`; //set the percentage on the container
 
-        if(ops === "error") {
-            $testCaseOps.textContent = `${ops}`;
+        if(isNaN(ops)) {
+            $testCaseOps.textContent = `error`;
             $testCaseOps.style.color = 'red';
         } 
         else{
