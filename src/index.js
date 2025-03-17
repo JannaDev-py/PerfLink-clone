@@ -83,13 +83,15 @@ function handleHistoryModal(){
     const $historyModal = document.querySelector('.history-modal');
 
     if(historyCounter%2 == 0){
-        $historyModal.style.display = 'none';
+        $historyModal.classList.add("history-open");
+        $historyModal.removeAttribute("inert");
         localStorage.setItem('historyButtonCounter', 0);
         const $historyModalUl = $historyModal.querySelector('ul');
         $historyModalUl.innerHTML = '';
-    }else{
-        $historyModal.style.display = 'flex';
         setHistory();
+    }else{
+        $historyModal.classList.remove("history-open")
+        $historyModal.setAttribute("inert", "");
     }
 
 }
@@ -103,14 +105,14 @@ $btnSaveOnThisUrl.addEventListener('click', ()=>{
     const globalCode = document.querySelector('#global-textarea .highlighted-code').innerText;
     const testCasesCode = document.querySelectorAll('.test-case-textarea .highlighted-code');
 
-    let nextDataBaseVersion = Number(localStorage.getItem('dataBaseVersion')) + 1;
-    let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;
+    const currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;
+    const nextDataBaseVersion = Number(localStorage.getItem('dataBaseVersion')) + 1;
     localStorage.setItem('dataBaseVersion', nextDataBaseVersion);
 
     saveDataIndexedDB(globalCode, testCasesCode, nextDataBaseVersion, currentPage).then(()=>{
         $btnSaveOnThisUrl.innerHTML = currentSvg;
+        setHistory();
     })
-    setHistory();
 });
 
 const $btnOpenWindow = document.querySelector('.save-url-open-window');
@@ -118,8 +120,8 @@ $btnOpenWindow.addEventListener('click', ()=>{
     localStorage.setItem('dataBaseVersion', Number(localStorage.getItem('dataBaseVersion')) + 1);
     localStorage.setItem('pageCount', Number(localStorage.getItem('pageCount')) + 1);
     window.open(createNewUrl(Number(localStorage.getItem('pageCount'))), "_blank");
+    handleHistoryModal();
     history.back();
-    setHistory();
 });
 
 const $btnAddTestCase = document.querySelector('#add-test-case');
@@ -185,10 +187,14 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
     }
 
     let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;
-    codeExecute();
+    const nextDataBaseVersion = Number(localStorage.getItem('dataBaseVersion')) + 1;
+    localStorage.setItem('dataBaseVersion', nextDataBaseVersion);
 
-    getDataIndexedDB(Number(localStorage.getItem('dataBaseVersion')), currentPage).then(data=>{
-        if(data !== null){
+    getDataIndexedDB(nextDataBaseVersion, currentPage).then(data=>{
+        if(data === null){ 
+            codeExecute();
+        }
+        else{
             //we will modified the test cases before run it and set the graph
             const testCaseCodeNode = document.querySelectorAll(".test-case .code");
             const dataCodeTestCaseLength = data.codeTestCaseStorage.length;
@@ -201,6 +207,7 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
                     updateCodeHighlight($testCase.querySelector('.code'));
                     setGraph(); 
                 }
+
             }else if(dataCodeTestCaseLength < testCaseCodeNode.length){
                 //delete test cases if there are more test cases than data storage
                 for (let i = (testCaseCodeNode.length - dataCodeTestCaseLength) - 2; i >= 0; i--) {

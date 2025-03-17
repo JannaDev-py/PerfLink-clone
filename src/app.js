@@ -16,12 +16,11 @@ export function saveDataIndexedDB(globalCode, testCasesCode, dataBaseVersion, pa
     
         IDBrequest.onsuccess = function (event) {
             const db = event.target.result;
-    
             const IDBtransaction = db.transaction(`page-${pageNumber}`, "readwrite");
             const objectStore = IDBtransaction.objectStore(`page-${pageNumber}`);
     
             const testCasesCodeArray = Array.from(testCasesCode)
-            const codeTestCase = testCasesCodeArray.map(code => { return code.textContent});
+            const codeTestCase = testCasesCodeArray.map(code => code.textContent);
     
             objectStore.put({ globalCode, codeTestCase }, 0);
             resolve(true);
@@ -73,9 +72,6 @@ export function getDataIndexedDB(dataBaseVersion, pageNumber) {
                 IDBtransaction.oncomplete = function () {
                     db.close();
                 }    
-            }else{
-                localStorage.setItem('dataBaseVersion', Number(localStorage.getItem('dataBaseVersion')) + 1);
-                // getDataIndexedDB(Number(localStorage.getItem("dataBaseVersion")), pageNumber);
             }
         };
 
