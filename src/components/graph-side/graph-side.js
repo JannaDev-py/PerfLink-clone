@@ -91,12 +91,17 @@ export function setHistory(){
 
             for(const archiveName of archiveNames){
                 const li = document.createElement('li');
+                const modifiedArchiveName = (localStorage.getItem(`page-${archiveName.split("-")[1]}`) !== null) ? localStorage.getItem(`page-${archiveName.split("-")[1]}`) : archiveName.charAt(0).toUpperCase() + archiveName.slice(1);
 
                 li.innerHTML += `
-                <a href="${href}?${archiveName.split("-")[1]}">${archiveName.charAt(0).toUpperCase() + archiveName.slice(1)}</a>
-                <button delete-archive aria-label="delete archive" title="delete archive">
+                <a href="${href}?${archiveName.split("-")[1]}">${modifiedArchiveName}</a>
+                <button aria-label="delete archive" title="delete archive">
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-database-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6c0 1.657 3.582 3 8 3s8 -1.343 8 -3s-3.582 -3 -8 -3s-8 1.343 -8 3" /><path d="M4 6v6c0 1.657 3.582 3 8 3c.537 0 1.062 -.02 1.57 -.058" /><path d="M20 13.5v-7.5" /><path d="M4 12v6c0 1.657 3.582 3 8 3c.384 0 .762 -.01 1.132 -.03" /><path d="M22 22l-5 -5" /><path d="M17 22l5 -5" /></svg>
-                </button>`;    
+                </button>
+                <button class="change-archive-name" aria-label="change archive name" title="change archive name">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-circuit-changeover"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M2 12h2" /><path d="M20 7h2" /><path d="M6 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M18 7m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M20 17h2" /><path d="M18 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M7.5 10.5l8.5 -3.5" /></svg>
+                </button>
+                `;    
                 
                 const button = li.querySelector('button');
                 button.addEventListener("click", ()=>{
@@ -121,9 +126,27 @@ export function setHistory(){
                         const db = event.target.result;
                         db.close();
                     };
-    
+                    if(localStorage.getItem(`page-${archiveName.split("-")[1]}`) !== null){
+                        localStorage.removeItem(`page-${archiveName.split("-")[1]}`);
+                    }
                     localStorage.setItem('dataBaseVersion', (Number(localStorage.getItem('dataBaseVersion')) + 1));
                 })
+
+                const $changeArchiveName = li.querySelector('.change-archive-name');
+                $changeArchiveName.addEventListener('click', () => {
+                    const archiveName = li.querySelector('a').textContent;
+                    const link = li.querySelector('a');
+                    link.setAttribute('contenteditable', 'true');
+                    link.focus();
+    
+                    document.addEventListener('keydown', (e) => {
+                        if(e.key === 'Enter'){
+                            localStorage.setItem(`page-${archiveName.split("-")[1]}`, link.textContent);
+                            link.removeAttribute('contenteditable');
+                        }
+                    })
+                })
+
                 fragment.appendChild(li);
             }
             $historyModalUl.appendChild(fragment);

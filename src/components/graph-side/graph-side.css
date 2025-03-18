@@ -170,7 +170,15 @@
     color: var(--text-color);
     cursor: pointer;
 }
-.graph-side .history-modal nav ul li button{
+.graph-side .history-modal nav ul li .change-archive-name{
+    color: var(--primary-color);
+    background: transparent;
+    position: absolute;
+    cursor: pointer;
+    right: 30px;
+    top: 9px;
+}
+.graph-side .history-modal nav ul li button:not(.change-archive-name){
     color: var(--primary-color);
     background: transparent;
     position: absolute;
