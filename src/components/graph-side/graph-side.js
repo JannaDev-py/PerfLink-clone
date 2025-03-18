@@ -131,10 +131,15 @@ export function setHistory(){
     }
 }
 
-function addTerminalMessage(message, color){
+export function addTerminalMessage(message, color = 'var(--text-color)'){
     const $terminalModal = document.querySelector('.terminal-modal');
+    const $messageContainer = $terminalModal.querySelector('.message-container');
     const outputElement = document.createElement('output');
-    outputElement.innerHTML += message.trim();
-    $terminalModal.appendChild(outputElement);
+    const br = document.createElement('br');
+    outputElement.innerHTML += message;
+    $messageContainer.appendChild(outputElement);
+    $messageContainer.appendChild(br);
     outputElement.style.color = color;
+
+    $messageContainer.scrollTop = $messageContainer.scrollHeight;
 }

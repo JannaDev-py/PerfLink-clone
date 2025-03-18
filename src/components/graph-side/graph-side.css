@@ -44,11 +44,12 @@
 .graph-side .history{
     top: 0;
     right: 60px;
+    z-index: 15;
 }
 .graph-side .terminal{
     top: 0;
     right: 0;
-    z-index: 10;
+    z-index: 15;
 }
 
 .graph-side .history-modal, 
@@ -67,8 +68,9 @@
 }
 .graph-side .history-open, 
 .graph-side .terminal-open{
-    width: 300px;
-    height: 350px;
+    width: 30%;
+    min-width: 300px;
+    height: 55%;
     box-shadow: 0 0 5px 0 var(--primary-color);
     border: var(--primary-color) 2px solid;
     background: var(--third-color);
@@ -82,42 +84,58 @@
     position: absolute;
 }
 .graph-side .terminal-modal{
+    font-size: 1.1rem;
+    display: flex;
+    flex-direction: column;
+}
+.graph-side .terminal-modal .message-container{
+    width: 100%;
     overflow-y: auto;
     scrollbar-color: var(--primary-color) transparent;
-    font-size: 1.1rem;
-    padding: 70px 10px 10px 10px ;
+    flex-grow: 1;
+}
+.graph-side .terminal-modal .input-terminal{
+    display: flex;
+    justify-content: space-around;
+    align-items: end;
+    width: 100%;
+}
+.graph-side .terminal-modal .input-terminal input{
+    width: 70%;
+    padding: 11px 10px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    box-shadow: 0 0 5px 0 var(--primary-color);
+    border: 1px solid var(--primary-color);
 }
 .graph-side .terminal-modal button{
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 10px;
     border-radius: 10px;
 }
 .graph-side .terminal-modal *{
     white-space: pre-wrap;
 }
 .graph-side .history-modal .search-input{
-    width: 100%;
+    width: 300px;
     height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     position: relative;
-    padding: 15px;
     gap: 10px;
 }
 .graph-side .history-modal .search-input svg{
     position: absolute;
     top: calc(80% - 15px);
-    left: 17%;
+    left: 40px;
     width: 15px;
     height: 15px;
 }
 .graph-side .history-modal .search-input label{
     width: 80%;
-    font-size: 15px;
+    font-size: 16px;
 }
 .graph-side .history-modal .search-input input{
     box-shadow: 0 0 5px 0 var(--primary-color);
@@ -161,7 +179,7 @@
 }
 
 .graph-side .numbers{
-    width: 400px;
+    width: 80%;
     margin-top: 20px;
     font-size: 1.2rem;
     display: flex;
@@ -193,15 +211,9 @@
     background: #fff2;
 }
 
-.graph-side .history-modal *{
+.graph-side .history-modal *, .graph-side .history-modal .search-input, .graph-side .terminal-modal *{
     display: none;
 }
-.graph-side .history-open *{
-    display: block;
-}
-.graph-side .terminal-modal *{
-    display: none;
-}
-.graph-side .terminal-open *{
+.graph-side .history-open *, .graph-side .terminal-open *{
     display: block;
 }

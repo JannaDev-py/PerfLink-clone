@@ -36,10 +36,12 @@ body{
     align-items: center;
     cursor: pointer;
     display: flex;
+    background: var(--third-color);
 }
 @media (max-width: 1000px){
     body{
         flex-direction: column;
+        height: auto;
     }
     .code-side{
         width: 100%;   

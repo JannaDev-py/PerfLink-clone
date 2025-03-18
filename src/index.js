@@ -1,5 +1,5 @@
 import { innerTestCase, setTestCaseValuesByDelete } from './components/test-case/test-case.js';
-import { setGraph, setGraphValues, setHistory } from './components/graph-side/graph-side.js';
+import { setGraph, setGraphValues, setHistory, addTerminalMessage } from './components/graph-side/graph-side.js';
 import { createNewUrl, saveDataIndexedDB, getDataIndexedDB } from './app.js';
 
 function runTestCases(code){
@@ -100,16 +100,16 @@ function handleTerminalModal(){
     const $terminalModal = document.querySelector('.terminal-modal');
     const terminalModalCounter = Number(localStorage.getItem('terminalModalCounter'));
     const numberButtonTerminal = document.querySelector(".graph-side .terminal div");
+    const $messageContainer = $terminalModal.querySelector('.message-container');
+    $messageContainer.scrollTop = $messageContainer.scrollHeight;
 
     if(terminalModalCounter%2 == 0){
         $terminalModal.classList.add("terminal-open");
         $terminalModal.removeAttribute("inert");
         localStorage.setItem('terminalModalCounter', 0);
 
-        if(numberButtonTerminal.style.display == 'block' || numberButtonTerminal.style.display == ''){
-            numberButtonTerminal.style.display = 'none';
-            sessionStorage.setItem('terminalMessagesNotViewed', 0);
-        }
+        numberButtonTerminal.style.display = 'none';
+        sessionStorage.setItem('terminalMessagesNotViewed', 0);
     }else{
         $terminalModal.classList.remove("terminal-open")
         $terminalModal.setAttribute("inert", "");
@@ -197,11 +197,34 @@ $terminalButton.addEventListener('click', ()=>{
 
 const $clearTerminalButton = document.querySelector('.terminal-modal button');
 $clearTerminalButton.addEventListener('click', ()=>{
-    const $terminalModal = document.querySelector('.terminal-modal');
     const $outputMessages = document.querySelectorAll('.terminal-modal output');
+    const $brTag = document.querySelectorAll('.terminal-modal br');
     sessionStorage.setItem('terminalMessagesNotViewed', 0);
-    $outputMessages.forEach(outputMessage => outputMessage.remove());
+    if($brTag.length !== 0) $brTag.forEach(br => br.remove());
+    if($outputMessages.length !== 0) $outputMessages.forEach(outputMessage => outputMessage.remove());
 });
+
+const $terminalInput = document.querySelector('.terminal-modal .input-terminal input');
+$terminalInput.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){
+        if($terminalInput.value.includes('console.')){
+            if($terminalInput.value.includes('error')){
+                const terminalValue = $terminalInput.value.replace(/console\.\w*/, '').replace(/[()]/g, '').replace(/\"/g, '');
+                addTerminalMessage(terminalValue, '#f33');
+            }else{
+                const terminalValue = $terminalInput.value.replace(/console\.\w*/, '').replace(/[()]/g, '').replace(/\"/g, '');
+                addTerminalMessage(terminalValue, 'var(--text-color)');
+            }
+        }else{
+            try{
+                eval($terminalInput.value);
+            }catch(error){
+                addTerminalMessage(error, '#f33');
+            }
+        }
+        $terminalInput.value = '';
+    }
+})
 
 //on init we need to set the graph and run the test cases
 document.addEventListener(`DOMContentLoaded`, ()=>{
