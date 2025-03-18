@@ -95,6 +95,7 @@ function handleHistoryModal(){
     }
 }
 
+let tempCounterTerminalModal = 0;
 function handleTerminalModal(){
     const $terminalModal = document.querySelector('.terminal-modal');
     const terminalModalCounter = Number(localStorage.getItem('terminalModalCounter'));
@@ -103,6 +104,10 @@ function handleTerminalModal(){
         $terminalModal.classList.add("terminal-open");
         $terminalModal.removeAttribute("inert");
         localStorage.setItem('terminalModalCounter', 0);
+        tempCounterTerminalModal++;
+        if(tempCounterTerminalModal == 2){
+            $terminalModal.removeChild($terminalModal.querySelector('.welcome-message'));
+        }
     }else{
         $terminalModal.classList.remove("terminal-open")
         $terminalModal.setAttribute("inert", "");
