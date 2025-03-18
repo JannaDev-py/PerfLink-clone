@@ -7,8 +7,7 @@
     justify-content: center;
     background: var(--graph-side-color);
     padding: 50px;
-    --after-terminal-display: block; 
-    --after-terminal-number: "1";
+    --number-terminal-display: block; 
 }
 .graph-side .graph-svg{
     transform: rotate(180deg);
@@ -33,12 +32,11 @@
     align-items: center;
     justify-content: center;
 }
-.graph-side .terminal div::after{
+.graph-side .terminal div{
     position: absolute;
-    display: var(--after-terminal-display);
-    content: var(--after-terminal-number, "");
-    top: -8px;
-    right: -8px;
+    display: var(--number-terminal-display);
+    top: -4px;
+    right: -4px;
     width: 17px;
     height: 17px;
     border-radius: 100%;
@@ -86,7 +84,7 @@
     position: absolute;
 }
 .graph-side .terminal-modal{
-    overflow-y: scroll;
+    overflow-y: auto;
     scrollbar-color: var(--primary-color) transparent;
 }
 .graph-side .terminal-modal *{

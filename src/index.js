@@ -95,7 +95,6 @@ function handleHistoryModal(){
     }
 }
 
-let tempCounterTerminalModal = 0;
 function handleTerminalModal(){
     const $terminalModal = document.querySelector('.terminal-modal');
     const terminalModalCounter = Number(localStorage.getItem('terminalModalCounter'));
@@ -103,10 +102,16 @@ function handleTerminalModal(){
     if(terminalModalCounter%2 == 0){
         $terminalModal.classList.add("terminal-open");
         $terminalModal.removeAttribute("inert");
-        localStorage.setItem('terminalModalCounter', 0);
-        tempCounterTerminalModal++;
-        if(tempCounterTerminalModal == 2){
-            $terminalModal.removeChild($terminalModal.querySelector('.welcome-message'));
+
+        //remove welcome message with temporary counter to can reset it when the page is reloaded
+        if(sessionStorage.getItem('terminalWelcomeCounter') !== null){
+            sessionStorage.setItem('terminalWelcomeCounter', Number(sessionStorage.getItem('terminalWelcomeCounter')) + 1);
+            if(sessionStorage.getItem('terminalWelcomeCounter') && sessionStorage.getItem('terminalWelcomeCounter') == 2){
+                if($terminalModal.querySelector('.welcome-message')){
+                    sessionStorage.removeItem('terminalWelcomeCounter');
+                    $terminalModal.removeChild($terminalModal.querySelector('.welcome-message'));
+                }
+            }    
         }
     }else{
         $terminalModal.classList.remove("terminal-open")
@@ -212,6 +217,9 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
     }
     if(localStorage.getItem('terminalModalCounter') === null){
         localStorage.setItem('terminalModalCounter', 1);
+    }
+    if(sessionStorage.getItem('terminalWelcomeCounter') === null){
+        sessionStorage.setItem('terminalWelcomeCounter', 0);
     }
 
     let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;

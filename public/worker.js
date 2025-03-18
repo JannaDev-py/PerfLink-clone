@@ -19,6 +19,5 @@ onmessage = async (e) => {
         self.postMessage(result);
     } catch (e) {
         self.postMessage({ops: e});
-        console.log(e);
     }
 }
