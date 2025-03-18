@@ -208,13 +208,7 @@ const $terminalInput = document.querySelector('.terminal-modal .input-terminal i
 $terminalInput.addEventListener('keydown', (e)=>{
     if(e.key === 'Enter'){
         if($terminalInput.value.includes('console.')){
-            if($terminalInput.value.includes('error')){
-                const terminalValue = $terminalInput.value.replace(/console\.\w*/, '').replace(/[()]/g, '').replace(/\"/g, '');
-                addTerminalMessage(terminalValue, '#f33');
-            }else{
-                const terminalValue = $terminalInput.value.replace(/console\.\w*/, '').replace(/[()]/g, '').replace(/\"/g, '');
-                addTerminalMessage(terminalValue, 'var(--text-color)');
-            }
+            eval($terminalInput.value.replace(/console\.\w*/g, 'addTerminalMessage'));
         }else{
             try{
                 eval($terminalInput.value);
