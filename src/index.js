@@ -45,7 +45,7 @@ function executeTestCasesUX(){
     const $testCaseOps = document.querySelectorAll('.test-case .ops');
 
     $testCaseOps.forEach(testCaseOp => testCaseOp.innerHTML = 
-        '<svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24px" height="15px"><circle cx="4" cy="12" r="3"><animate id="spinner_qFRN" begin="0;spinner_OcgL.end+0.25s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="12" cy="12" r="3"><animate begin="spinner_qFRN.begin+0.1s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="20" cy="12" r="3"><animate id="spinner_OcgL" begin="spinner_qFRN.begin+0.2s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle></svg>');
+        '<svg fill="var(--text-color)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24px" height="15px"><circle cx="4" cy="12" r="3"><animate id="spinner_qFRN" begin="0;spinner_OcgL.end+0.25s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="12" cy="12" r="3"><animate begin="spinner_qFRN.begin+0.1s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle><circle cx="20" cy="12" r="3"><animate id="spinner_OcgL" begin="spinner_qFRN.begin+0.2s" attributeName="cy" calcMode="spline" dur="0.6s" values="12;6;12" keySplines=".33,.66,.66,1;.33,0,.66,.33"/></circle></svg>');
     
     //reset the height of the line percentage before that be overwritten by the new values
     const $rectSVG = document.querySelectorAll('.graph-svg .line-percentage');
@@ -93,7 +93,6 @@ function handleHistoryModal(){
         $historyModal.classList.remove("history-open")
         $historyModal.setAttribute("inert", "");
     }
-
 }
 
 function handleTerminalModal(){
@@ -103,7 +102,17 @@ function handleTerminalModal(){
     if(terminalModalCounter%2 == 0){
         $terminalModal.classList.add("terminal-open");
         $terminalModal.removeAttribute("inert");
-        localStorage.setItem('terminalModalCounter', 0);
+
+        //remove welcome message with temporary counter to can reset it when the page is reloaded
+        if(sessionStorage.getItem('terminalWelcomeCounter') !== null){
+            sessionStorage.setItem('terminalWelcomeCounter', Number(sessionStorage.getItem('terminalWelcomeCounter')) + 1);
+            if(sessionStorage.getItem('terminalWelcomeCounter') && sessionStorage.getItem('terminalWelcomeCounter') == 2){
+                if($terminalModal.querySelector('.welcome-message')){
+                    sessionStorage.removeItem('terminalWelcomeCounter');
+                    $terminalModal.removeChild($terminalModal.querySelector('.welcome-message'));
+                }
+            }    
+        }
     }else{
         $terminalModal.classList.remove("terminal-open")
         $terminalModal.setAttribute("inert", "");
@@ -208,6 +217,9 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
     }
     if(localStorage.getItem('terminalModalCounter') === null){
         localStorage.setItem('terminalModalCounter', 1);
+    }
+    if(sessionStorage.getItem('terminalWelcomeCounter') === null){
+        sessionStorage.setItem('terminalWelcomeCounter', 0);
     }
 
     let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;

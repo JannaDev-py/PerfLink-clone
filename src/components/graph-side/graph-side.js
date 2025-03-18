@@ -63,6 +63,7 @@ export function setGraphValues(data){
         if(isNaN(ops)) {
             $testCaseOps.textContent = `error`;
             $testCaseOps.style.color = 'red';
+            addTerminalMessage(`Error: ${ops}`, 'red');
         } 
         else{
             $testCaseOps.textContent = `${ops.toLocaleString('en-US')} ops/s`;  //.toLocaleString() to format the number
@@ -127,4 +128,12 @@ export function setHistory(){
             $historyModalUl.appendChild(fragment);
         }
     }
+}
+
+function addTerminalMessage(message, color){
+    const $terminalModal = document.querySelector('.terminal-modal');
+    const outputElement = document.createElement('output');
+    outputElement.innerHTML += message.trim();
+    $terminalModal.appendChild(outputElement);
+    outputElement.style.color = color;
 }
