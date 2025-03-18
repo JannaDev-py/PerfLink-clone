@@ -123,19 +123,19 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    position: relative;
     gap: 10px;
+    position: relative;
 }
 .graph-side .history-modal .search-input svg{
     position: absolute;
-    top: calc(80% - 15px);
-    left: 40px;
-    width: 15px;
-    height: 15px;
+    top: 40px;
+    left: 38px;
+    width: 20px;
+    height: 20px;
 }
 .graph-side .history-modal .search-input label{
     width: 80%;
-    font-size: 16px;
+    font-size: 18px;
 }
 .graph-side .history-modal .search-input input{
     box-shadow: 0 0 5px 0 var(--primary-color);
@@ -146,6 +146,7 @@
     border-radius: 10px;
     border: none;
     width: 80%;
+    font-size: 18px;
 }
 .graph-side .history-modal nav{
     width: 100%;
@@ -216,4 +217,7 @@
 }
 .graph-side .history-open *, .graph-side .terminal-open *{
     display: block;
+}
+.graph-side .history-open .search-input{
+    display: flex;
 }
