@@ -70,11 +70,12 @@ function executeTestCasesUX(){
     
     //when all promises are resolved we can use resultsTestCases to set the graph
     Promise.all(promises)
-    .then(() => {
-            setGraphValues(resultsTestCases);
+    .then(async () => {
+            await setGraphValues(resultsTestCases);
+            await handleTerminalModal();
         })
         .catch(error => {
-            console.error('Ocurrió un error:', error);
+            console.error('it was an error:', error);
         });
 }
 
@@ -98,24 +99,26 @@ function handleHistoryModal(){
 function handleTerminalModal(){
     const $terminalModal = document.querySelector('.terminal-modal');
     const terminalModalCounter = Number(localStorage.getItem('terminalModalCounter'));
+    const numberButtonTerminal = document.querySelector(".graph-side .terminal div");
 
     if(terminalModalCounter%2 == 0){
         $terminalModal.classList.add("terminal-open");
         $terminalModal.removeAttribute("inert");
+        localStorage.setItem('terminalModalCounter', 0);
 
-        //remove welcome message with temporary counter to can reset it when the page is reloaded
-        if(sessionStorage.getItem('terminalWelcomeCounter') !== null){
-            sessionStorage.setItem('terminalWelcomeCounter', Number(sessionStorage.getItem('terminalWelcomeCounter')) + 1);
-            if(sessionStorage.getItem('terminalWelcomeCounter') && sessionStorage.getItem('terminalWelcomeCounter') == 2){
-                if($terminalModal.querySelector('.welcome-message')){
-                    sessionStorage.removeItem('terminalWelcomeCounter');
-                    $terminalModal.removeChild($terminalModal.querySelector('.welcome-message'));
-                }
-            }    
+        if(numberButtonTerminal.style.display == 'block' || numberButtonTerminal.style.display == ''){
+            numberButtonTerminal.style.display = 'none';
+            sessionStorage.setItem('terminalMessagesNotViewed', 0);
         }
     }else{
         $terminalModal.classList.remove("terminal-open")
         $terminalModal.setAttribute("inert", "");
+
+        const messagesNotViewed = Number(sessionStorage.getItem('terminalMessagesNotViewed'));
+        if(messagesNotViewed !== 0){
+            numberButtonTerminal.style.display = 'block';
+            numberButtonTerminal.textContent = messagesNotViewed;
+        }
     }
 }
 
@@ -192,6 +195,14 @@ $terminalButton.addEventListener('click', ()=>{
     handleTerminalModal()
 });
 
+const $clearTerminalButton = document.querySelector('.terminal-modal button');
+$clearTerminalButton.addEventListener('click', ()=>{
+    const $terminalModal = document.querySelector('.terminal-modal');
+    const $outputMessages = document.querySelectorAll('.terminal-modal output');
+    sessionStorage.setItem('terminalMessagesNotViewed', 0);
+    $outputMessages.forEach(outputMessage => outputMessage.remove());
+});
+
 //on init we need to set the graph and run the test cases
 document.addEventListener(`DOMContentLoaded`, ()=>{
     const codeExecute = ()=>{
@@ -206,20 +217,17 @@ document.addEventListener(`DOMContentLoaded`, ()=>{
         handleTerminalModal();
     }
 
-    if(localStorage.getItem('dataBaseVersion') === null){
-        localStorage.setItem('dataBaseVersion', 1);
+    if( localStorage.getItem('dataBaseVersion')      === null ||
+        localStorage.getItem('pageCount')            === null ||
+        localStorage.getItem('historyButtonCounter') === null ||
+        localStorage.getItem('terminalModalCounter') === null ){
+            localStorage.setItem('pageCount', 1);
+            localStorage.setItem('historyButtonCounter', 1);
+            localStorage.setItem('dataBaseVersion', 1);
+            localStorage.setItem('terminalModalCounter', 1);
     }
-    if(localStorage.getItem('pageCount') === null){
-        localStorage.setItem('pageCount', 1);
-    }
-    if(localStorage.getItem('historyButtonCounter') === null){
-        localStorage.setItem('historyButtonCounter', 1);
-    }
-    if(localStorage.getItem('terminalModalCounter') === null){
-        localStorage.setItem('terminalModalCounter', 1);
-    }
-    if(sessionStorage.getItem('terminalWelcomeCounter') === null){
-        sessionStorage.setItem('terminalWelcomeCounter', 0);
+    if(sessionStorage.getItem('terminalMessagesNotViewed') ===  null){
+        sessionStorage.setItem('terminalMessagesNotViewed', 1);
     }
 
     let currentPage = (location.href.split('?')[1]) ? Number(location.href.split('?')[1]) : 1;

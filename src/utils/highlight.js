@@ -23,8 +23,10 @@ function updateCodeHighlight(el){
             //then we need to make a div with the content of the element and highlight it
             //if dont a br, the html element will be empty and the code content will not be selected then no highlighted code will be shown
             const br = document.createElement("br");
-
-            el.appendChild(br);
+            
+            if(el.innerHTML == "") {
+                el.appendChild(br);
+            }
 
             el.appendChild(document.createElement("DIV"));
 

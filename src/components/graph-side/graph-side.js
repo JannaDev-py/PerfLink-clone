@@ -61,9 +61,10 @@ export function setGraphValues(data){
         $percentageOnContainer.textContent = `${percentageOnContainer}%`; //set the percentage on the container
 
         if(isNaN(ops)) {
-            $testCaseOps.textContent = `error`;
-            $testCaseOps.style.color = 'red';
-            addTerminalMessage(`Error: ${ops}`, 'red');
+            $testCaseOps.textContent = ops.message;
+            $testCaseOps.style.color = '#f33';
+            addTerminalMessage(`Error: ${ops}`, '#f33');
+            sessionStorage.setItem('terminalMessagesNotViewed', Number(sessionStorage.getItem('terminalMessagesNotViewed')) + 1);
         } 
         else{
             $testCaseOps.textContent = `${ops.toLocaleString('en-US')} ops/s`;  //.toLocaleString() to format the number
